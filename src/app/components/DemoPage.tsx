@@ -176,67 +176,101 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
   };
 
   return (
-    <div className="flex items-center justify-center h-full p-8" style={{ background: "linear-gradient(135deg, #FFF9FC 0%, #F8F4F6 100%)" }}>
-      <div className="w-full max-w-md">
+    <div className="h-full flex flex-col" style={{ background: "#EFE5E7" }}>
+      <div
+        className="flex items-center justify-between px-8 py-4 flex-shrink-0"
+        style={{ background: "#5A2E3C", borderBottom: "1px solid rgba(0,0,0,0.22)" }}
+      >
+        <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: 22 }}>
+          University of Washington
+        </h2>
+        <span style={{ fontFamily: "Inter, sans-serif", color: "white", fontSize: 18 }}>
+          Monday, Jun 1 | 10 : 00 AM
+        </span>
+      </div>
+
+      <div className="grid grid-cols-[0.95fr_1.45fr] flex-1">
         <div
-          className="w-24 h-24 rounded-3xl flex items-center justify-center mb-8 mx-auto"
-          style={{ background: "#512D38" }}
+          className="px-16 py-20"
+          style={{ background: "#5A2E3C" }}
         >
-          <MapPin size={48} style={{ color: "#F4BFDB" }} />
-        </div>
-        <h1 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#2B2B2B", fontSize: 42, marginBottom: 12, textAlign: "center" }}>
-          Welcome to WayPoint
-        </h1>
-        <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 17, marginBottom: 48, textAlign: "center", lineHeight: 1.5 }}>
-          Sign in with your UW NetID to connect with your campus community
-        </p>
+          <div className="flex items-center mb-24">
+            <span style={{ fontFamily: "Poppins, sans-serif", color: "white", fontSize: 58, fontWeight: 700, letterSpacing: "-0.04em" }}>
+              WayP
+            </span>
+            <MapPin size={54} strokeWidth={2.8} style={{ color: "white", margin: "0 -2px" }} />
+            <span style={{ fontFamily: "Poppins, sans-serif", color: "white", fontSize: 58, fontWeight: 700, letterSpacing: "-0.04em" }}>
+              int
+            </span>
+          </div>
 
-        <div className="w-full flex flex-col gap-4">
-          <input
-            value={netid}
-            onChange={(e) => setNetid(e.target.value)}
-            placeholder="UW NetID (e.g. jsmith23)"
-            className="w-full px-6 py-4 rounded-2xl border outline-none"
-            style={{
-              fontFamily: "Inter, sans-serif", fontSize: 16,
-              borderColor: "rgba(81,45,56,0.2)", color: "#2B2B2B",
-              background: "white",
-            }}
-          />
-          <input
-            type="password"
-            value={pw}
-            onChange={(e) => setPw(e.target.value)}
-            placeholder="Password"
-            className="w-full px-6 py-4 rounded-2xl border outline-none"
-            style={{
-              fontFamily: "Inter, sans-serif", fontSize: 16,
-              borderColor: "rgba(81,45,56,0.2)", color: "#2B2B2B",
-              background: "white",
-            }}
-          />
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleLogin}
-            className="w-full py-5 rounded-2xl font-semibold flex items-center justify-center gap-3"
-            style={{ background: "#512D38", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 18 }}
-          >
-            {loading ? (
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full"
+          <p style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.76)", fontSize: 17, lineHeight: 1.28, fontWeight: 700, letterSpacing: "0.08em", maxWidth: 310 }}>
+            Discover campus events, synchronize study sessions with friends, and build lifelong University connections with people you share activities with!
+          </p>
+        </div>
+
+        <div className="flex items-center justify-center px-16">
+          <div style={{ width: "100%", maxWidth: 380 }}>
+            <h1 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 30, marginBottom: 64, textAlign: "center" }}>
+              Sign in with your UW netID
+            </h1>
+
+            <label style={{ display: "block", fontFamily: "Inter, sans-serif", color: "#111", fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 8 }}>
+              UW NetID
+            </label>
+            <div
+              className="flex items-center mb-8"
+              style={{ background: "white", border: "1px solid #9A9A9A", borderRadius: 12, overflow: "hidden" }}
+            >
+              <input
+                value={netid}
+                onChange={(e) => setNetid(e.target.value)}
+                placeholder="e.g. jenny"
+                className="flex-1 px-4 py-3 outline-none"
+                style={{ fontFamily: "Inter, sans-serif", fontSize: 16, color: "#111", background: "transparent" }}
               />
-            ) : (
-              <>Sign In <ChevronRight size={20} /></>
-            )}
-          </motion.button>
-        </div>
+              <span style={{ fontFamily: "Inter, sans-serif", color: "#8A8A8A", fontSize: 16, fontWeight: 700, paddingRight: 16 }}>
+                @uw.edu
+              </span>
+            </div>
 
-        <p style={{ fontFamily: "Inter, sans-serif", color: "rgba(113,113,130,0.6)", fontSize: 14, marginTop: 32, textAlign: "center" }}>
-          Use your UW credentials · Privacy protected
-        </p>
+            <label style={{ display: "block", fontFamily: "Inter, sans-serif", color: "#111", fontSize: 16, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 8 }}>
+              Password
+            </label>
+            <input
+              type="password"
+              value={pw}
+              onChange={(e) => setPw(e.target.value)}
+              placeholder="••••••••••••"
+              className="w-full px-4 py-3 rounded-xl outline-none mb-16"
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: 16,
+                border: "1px solid #9A9A9A",
+                color: "#111",
+                background: "white",
+              }}
+            />
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleLogin}
+              className="mx-auto py-4 rounded-xl font-semibold flex items-center justify-center"
+              style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 15, letterSpacing: "0.08em", width: 190, boxShadow: "0 3px 6px rgba(0,0,0,0.25)" }}
+            >
+              {loading ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                />
+              ) : (
+                "LOG IN"
+              )}
+            </motion.button>
+          </div>
+        </div>
       </div>
     </div>
   );

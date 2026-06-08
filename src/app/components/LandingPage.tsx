@@ -9,6 +9,7 @@ import storyboard from "../../imports/Storyboard-1.png";
 import firstSketch from "../../imports/First_Sketch-1.png";
 import finalPaper from "../../imports/Final_Paper_Prototype-1.png";
 import initialPaper from "../../imports/Initial_Paper_Prototype-1.png";
+import waypointLogo from "../../imports/waypoint-logo.png";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -62,19 +63,16 @@ function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: "#F4BFDB" }}
-          >
-            <MapPin size={16} style={{ color: "#512D38" }} />
-          </div>
-          <span
-            className="font-bold text-white tracking-tight"
-            style={{ fontFamily: "Poppins, sans-serif", fontSize: 20 }}
-          >
-            WayPoint
-          </span>
+        <a
+          href="#"
+          className="flex items-center rounded-full overflow-hidden"
+          style={{ background: "white", padding: "4px 12px", boxShadow: "0 2px 12px rgba(0,0,0,0.16)" }}
+        >
+          <img
+            src={waypointLogo}
+            alt="WayPoint"
+            style={{ width: 150, height: 42, objectFit: "contain", display: "block" }}
+          />
         </a>
 
         {/* Desktop */}
@@ -275,7 +273,7 @@ function HeroSection() {
               {/* Screen content */}
               <div className="p-6" style={{ minHeight: 380 }}>
                 <div className="mb-6">
-                  <p style={{ fontFamily: "Poppins, sans-serif", color: "#F4BFDB", fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Welcome, Student!</p>
+                  <p style={{ fontFamily: "Poppins, sans-serif", color: "#F4BFDB", fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Welcome, Amy!</p>
                   <p style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 11 }}>See who's nearby</p>
                 </div>
 
@@ -783,42 +781,66 @@ function JourneySection() {
     {
       num: "01",
       title: "Problem Discovery",
-      desc: "We identified that social disconnection at large universities is a significant but underaddressed challenge.",
+      desc: "We started from the observation that friendships at a large university often depend on shared contexts like classes, clubs, group projects, or events. Once that context ends, students may still want to stay connected but lose the natural reason to reach out.",
+      details: [
+        "Target users: university students, including first-years, transfers, international students, and busy upperclassmen.",
+        "Core problem: students can meet people, but maintaining those connections over time takes effort, confidence, and timing.",
+      ],
       img: null,
       emoji: "🔍",
     },
     {
       num: "02",
       title: "User Research",
-      desc: "Interviews and diary studies revealed key pain points around scheduling, uncertainty, and social friction.",
+      desc: "We used semi-structured interviews and diary studies to understand how students currently keep in touch with close friends and people they want to become closer with.",
+      details: [
+        "Research methods: student interviews plus multi-day friendship diaries.",
+        "Key themes: inconsistent effort, awkwardness when reaching out, busy schedules, and situational friendships that fade after a shared environment disappears.",
+      ],
       img: null,
       emoji: "📋",
     },
     {
       num: "03",
       title: "Ideation & Sketching",
-      desc: "Early sketches explored kiosk-based concepts for a Club Connect system on campus.",
+      desc: "We explored concepts that could make reconnection feel natural instead of forced. Early sketches tested ways to surface clubs, nearby peers, campus events, and low-pressure messaging from a shared campus kiosk.",
+      details: [
+        "We focused on reducing the burden of deciding who to contact, when to reach out, and what to say.",
+        "The kiosk direction stood out because it uses the physical campus environment as shared context.",
+      ],
       img: firstSketch,
       emoji: null,
     },
     {
       num: "04",
       title: "Storyboarding",
-      desc: "Storyboards illustrated the student journey from club ending to reconnecting via WayPoint.",
+      desc: "We storyboarded realistic student situations: a club connection fading after the quarter, a student realizing a peer is nearby, and a lightweight invitation to reconnect through a shared event or message.",
+      details: [
+        "Primary task 1: deciding to reach out after a shared context ends.",
+        "Primary task 2: finding time to meet around busy and unpredictable schedules.",
+      ],
       img: storyboard,
       emoji: null,
     },
     {
       num: "05",
       title: "Paper Prototype",
-      desc: "Low-fidelity paper prototypes let us rapidly test core flows with real users.",
+      desc: "The paper prototype helped us test the core flow before polishing visuals: sign in, view clubs, check in at a campus location, discover nearby club peers, RSVP to events, and manage profile details.",
+      details: [
+        "We used the low-fidelity version to evaluate whether the kiosk flow made sense without relying on visual polish.",
+        "This step helped us clarify the difference between browsing friends and requiring check-in before nearby peers appear.",
+      ],
       img: finalPaper,
       emoji: null,
     },
     {
       num: "06",
       title: "Digital Prototype",
-      desc: "The final digital prototype brings WayPoint to life with a complete interactive experience.",
+      desc: "The final digital prototype turns the research into an interactive kiosk experience integrated around UW identity, student organizations, real-time presence, and campus events.",
+      details: [
+        "Final features: UW sign-in, clubs, nearby check-in, RSVP events, profile editing, and low-pressure messaging.",
+        "Value: WayPoint supports reconnection through shared context instead of asking students to initiate from scratch.",
+      ],
       img: digitalPrototype,
       emoji: null,
     },
@@ -885,13 +907,28 @@ function JourneySection() {
                       <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14, lineHeight: 1.6 }}>
                         {s.desc}
                       </p>
+                      <div className="mt-4 flex flex-col gap-2">
+                        {s.details.map((detail) => (
+                          <div key={detail} className="flex gap-2">
+                            <CheckCircle size={14} style={{ color: "#512D38", marginTop: 3, flexShrink: 0 }} />
+                            <p style={{ fontFamily: "Inter, sans-serif", color: "#4F4F5A", fontSize: 13, lineHeight: 1.5 }}>
+                              {detail}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
                       {s.img && (
-                        <img
-                          src={s.img}
-                          alt={s.title}
-                          className="mt-4 w-full rounded-xl object-cover"
-                          style={{ maxHeight: 180 }}
-                        />
+                        <div
+                          className="mt-5 w-full rounded-xl overflow-hidden flex items-center justify-center"
+                          style={{ background: "#FFF9FC", border: "1px solid rgba(81,45,56,0.08)", minHeight: 220 }}
+                        >
+                          <img
+                            src={s.img}
+                            alt={s.title}
+                            className="w-full h-full"
+                            style={{ maxHeight: 320, objectFit: "contain", display: "block" }}
+                          />
+                        </div>
                       )}
                       {s.emoji && (
                         <div className="mt-4 text-5xl text-center">{s.emoji}</div>
@@ -1223,11 +1260,15 @@ function Footer() {
         <div className="grid md:grid-cols-3 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#F4BFDB" }}>
-                <MapPin size={16} style={{ color: "#512D38" }} />
-              </div>
-              <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: 20 }}>WayPoint</span>
+            <div
+              className="inline-flex items-center rounded-full overflow-hidden mb-4"
+              style={{ background: "white", padding: "4px 12px" }}
+            >
+              <img
+                src={waypointLogo}
+                alt="WayPoint"
+                style={{ width: 150, height: 42, objectFit: "contain", display: "block" }}
+              />
             </div>
             <p style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 14, lineHeight: 1.6 }}>
               Turn Shared Communities Into Meaningful Connections
