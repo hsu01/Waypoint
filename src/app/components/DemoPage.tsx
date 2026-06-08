@@ -47,7 +47,6 @@ type Screen =
   | "login"
   | "home"
   | "clubs"
-  | "checkin"
   | "nearby"
   | "messaging"
   | "events"
@@ -428,103 +427,6 @@ function ClubsScreen({ state, setState }: { state: AppState; setState: (s: AppSt
   );
 }
 
-// ── Check In Screen ───────────────────────────────────────────────────────────
-
-function CheckInScreen({ state, setState, onNav }: { state: AppState; setState: (s: AppState) => void; onNav: (s: Screen) => void }) {
-  const locations = [
-    { name: "CSE Building", emoji: "💻" },
-    { name: "Odegaard Library", emoji: "📚" },
-    { name: "HUB Lobby", emoji: "🏛️" },
-    { name: "EEB Building", emoji: "⚡" },
-    { name: "Red Square", emoji: "🏔️" },
-    { name: "Allen Library", emoji: "📖" },
-  ];
-
-  const [done, setDone] = useState(false);
-
-  const checkIn = (loc: string) => {
-    setState({
-      ...state,
-      checkedIn: true,
-      checkInLocation: loc,
-      checkInUntil: "4:30pm",
-      checkInNote: "Working on CSE440 Homework",
-    });
-    setDone(true);
-    setTimeout(() => onNav("nearby"), 1800);
-  };
-
-  const checkOut = () => {
-    setState({ ...state, checkedIn: false, checkInLocation: "", checkInUntil: "", checkInNote: "" });
-    setDone(false);
-  };
-
-  if (done || state.checkedIn) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full p-8">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", bounce: 0.5 }}
-        >
-          <CheckCircle size={96} style={{ color: "#512D38", marginBottom: 24 }} />
-        </motion.div>
-        <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#2B2B2B", fontSize: 32, marginBottom: 12 }}>
-          You're Checked In!
-        </h2>
-        <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 17, textAlign: "center", marginBottom: 12 }}>
-          Your club members can now see you're nearby.
-        </p>
-        <p style={{ fontFamily: "Poppins, sans-serif", color: "#512D38", fontWeight: 600, fontSize: 24, marginBottom: 32 }}>
-          📍 {state.checkInLocation}
-        </p>
-        <div className="flex gap-4">
-          <button
-            onClick={() => onNav("nearby")}
-            className="px-8 py-4 rounded-2xl font-semibold"
-            style={{ background: "#512D38", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 16 }}
-          >
-            See Nearby Friends
-          </button>
-          <button
-            onClick={checkOut}
-            className="px-8 py-4 rounded-2xl"
-            style={{ background: "#F8F4F6", color: "#717182", fontFamily: "Poppins, sans-serif", fontSize: 16 }}
-          >
-            Check Out
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-8">
-      <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 15, marginBottom: 24 }}>
-        Where are you right now? Let your club friends find you.
-      </p>
-
-      <div className="grid grid-cols-3 gap-5">
-        {locations.map((loc) => (
-          <motion.button
-            key={loc.name}
-            whileHover={{ scale: 1.03, y: -4 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => checkIn(loc.name)}
-            className="p-8 rounded-2xl text-center flex flex-col gap-4 items-center"
-            style={{ background: "#F8F4F6", border: "1px solid rgba(81,45,56,0.1)" }}
-          >
-            <span className="text-5xl">{loc.emoji}</span>
-            <span style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 17 }}>
-              {loc.name}
-            </span>
-          </motion.button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ── Nearby Screen ─────────────────────────────────────────────────────────────
 
 function NearbyScreen({ state, setState, onMessage }: { state: AppState; setState: (s: AppState) => void; onMessage: (id: number) => void }) {
@@ -733,7 +635,7 @@ function NearbyScreen({ state, setState, onMessage }: { state: AppState; setStat
 
 // ── Messaging Screen ──────────────────────────────────────────────────────────
 
-function MessagingScreen({ state, setState, targetId }: { state: AppState; setState: (s: AppState) => void; targetId: number | null }) {
+function MessagingScreen({ state, setState, targetId, onClose }: { state: AppState; setState: (s: AppState) => void; targetId: number | null; onClose: () => void }) {
   const [text, setText] = useState(state.messageText);
   const [sent, setSent] = useState(state.messageSent !== null);
   const target = NEARBY.find((f) => f.id === targetId) ?? NEARBY[0];
@@ -745,8 +647,12 @@ function MessagingScreen({ state, setState, targetId }: { state: AppState; setSt
   };
 
   return (
-    <div className="p-8 h-full flex flex-col">
-      <div className="max-w-4xl mx-auto w-full flex flex-col h-full">
+    <div className="relative h-full">
+      <div
+        className="p-8 h-full flex flex-col"
+        style={{ filter: sent ? "blur(10px)" : "none", transition: "filter 180ms ease" }}
+      >
+        <div className="max-w-4xl mx-auto w-full flex flex-col h-full">
         {/* Header */}
         <div
           className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-200"
@@ -773,44 +679,6 @@ function MessagingScreen({ state, setState, targetId }: { state: AppState; setSt
 
         {/* Chat area */}
         <div className="flex-1 mb-6 overflow-y-auto">
-          {sent ? (
-            <div className="flex flex-col gap-5">
-              <div className="flex justify-end">
-                <div
-                  className="px-6 py-4 rounded-3xl rounded-tr-sm max-w-lg"
-                  style={{ background: "#512D38", color: "white", fontFamily: "Inter, sans-serif", fontSize: 16 }}
-                >
-                  {text}
-                </div>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className="flex justify-start"
-              >
-                <div
-                  className="px-6 py-4 rounded-3xl rounded-tl-sm max-w-lg"
-                  style={{ background: "#F8F4F6", color: "#2B2B2B", fontFamily: "Inter, sans-serif", fontSize: 16 }}
-                >
-                  Hey! That sounds great, see you in a bit 😊
-                </div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
-                className="text-center mt-4"
-              >
-                <div
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full"
-                  style={{ background: "#DDF3E3", color: "#2B2B2B", fontFamily: "Inter, sans-serif", fontSize: 14 }}
-                >
-                  <CheckCircle size={16} /> Message delivered · Check your UW email
-                </div>
-              </motion.div>
-            </div>
-          ) : (
             <div
               className="flex flex-col items-center justify-center h-full"
               style={{ minHeight: 240 }}
@@ -820,11 +688,9 @@ function MessagingScreen({ state, setState, targetId }: { state: AppState; setSt
                 Send a low-pressure message to reconnect
               </p>
             </div>
-          )}
         </div>
 
         {/* Quick messages */}
-        {!sent && (
           <div className="flex flex-wrap gap-3 mb-5">
             {["Hey! Want to study together?", "Are you free right now?", "Heading to the HUB!"].map((q) => (
               <button
@@ -837,10 +703,8 @@ function MessagingScreen({ state, setState, targetId }: { state: AppState; setSt
               </button>
             ))}
           </div>
-        )}
 
         {/* Input */}
-        {!sent && (
           <div className="flex gap-3">
             <input
               value={text}
@@ -863,8 +727,56 @@ function MessagingScreen({ state, setState, targetId }: { state: AppState; setSt
               <Send size={20} />
             </motion.button>
           </div>
-        )}
+        </div>
       </div>
+
+      <AnimatePresence>
+        {sent && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ background: "rgba(255,255,255,0.12)" }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.96 }}
+              style={{ background: "white", width: 575, boxShadow: "0 3px 12px rgba(0,0,0,0.35)" }}
+            >
+              <div
+                className="flex items-center justify-between px-5 py-3"
+                style={{ background: "#5A2E3C" }}
+              >
+                <h3 style={{ fontFamily: "Poppins, sans-serif", color: "white", fontSize: 24, fontWeight: 600 }}>
+                  Message
+                </h3>
+                <button
+                  onClick={onClose}
+                  aria-label="Close message confirmation"
+                  style={{ color: "white", fontFamily: "Inter, sans-serif", fontSize: 28, lineHeight: 1 }}
+                >
+                  x
+                </button>
+              </div>
+              <div className="px-20 py-12 flex flex-col items-center">
+                <CheckCircle size={54} strokeWidth={1.8} style={{ color: "#1A9A00", marginBottom: 28 }} />
+                <div
+                  className="rounded-xl px-10 py-14 text-center"
+                  style={{ background: "#EFE5E7", width: "100%" }}
+                >
+                  <p style={{ fontFamily: "Poppins, sans-serif", color: "#111", fontSize: 21, fontWeight: 700, lineHeight: 1.25 }}>
+                    You can check your UW email<br />
+                    for responses and to continue<br />
+                    the conversation
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -1266,12 +1178,10 @@ export function DemoPage() {
         return <HomeScreen onNav={setScreen} />;
       case "clubs":
         return <ClubsScreen state={appState} setState={setAppState} />;
-      case "checkin":
-        return <CheckInScreen state={appState} setState={setAppState} onNav={setScreen} />;
       case "nearby":
         return <NearbyScreen state={appState} setState={setAppState} onMessage={handleMessage} />;
       case "messaging":
-        return <MessagingScreen state={appState} setState={setAppState} targetId={messageTarget} />;
+        return <MessagingScreen state={appState} setState={setAppState} targetId={messageTarget} onClose={() => setScreen("nearby")} />;
       case "events":
         return <EventsScreen state={appState} setState={setAppState} />;
       case "profile":
@@ -1327,7 +1237,7 @@ export function DemoPage() {
       {/* Screen selector */}
       {screen !== "login" && (
         <div className="mt-8 flex flex-wrap justify-center gap-3 max-w-4xl">
-          {(["home", "clubs", "checkin", "nearby", "messaging", "events", "profile"] as Screen[]).map((s) => (
+          {(["home", "clubs", "nearby", "messaging", "events", "profile"] as Screen[]).map((s) => (
             <button
               key={s}
               onClick={() => setScreen(s)}
@@ -1340,7 +1250,7 @@ export function DemoPage() {
                 border: screen === s ? "2px solid #F4BFDB" : "1px solid rgba(255,255,255,0.15)",
               }}
             >
-              {s === "checkin" ? "Check In" : s}
+              {s}
             </button>
           ))}
         </div>
