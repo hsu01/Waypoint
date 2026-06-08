@@ -185,7 +185,7 @@ function HeroSection() {
             style={{ background: "rgba(244,191,219,0.15)", border: "1px solid rgba(244,191,219,0.3)", color: "#F4BFDB", fontFamily: "Inter, sans-serif" }}
           >
             <Star size={14} fill="currentColor" />
-            CSE 440 · University of Washington · Spring 2026
+            CSE 440 · University of Washington · Spring 2026 · TEAM MANGO
           </div>
 
           <h1
@@ -206,7 +206,7 @@ function HeroSection() {
             className="mb-4"
             style={{ fontFamily: "Inter, sans-serif", fontSize: 18, color: "rgba(255,255,255,0.75)", lineHeight: 1.7, maxWidth: 560 }}
           >
-            Imagine arriving on campus and discovering that three of your club friends are studying just one building away—but you never knew they were there.
+            Imagine arriving on campus and discovering that three of your club friends are studying just one building away but you never knew they were there.
           </p>
           <p
             className="mb-10"
@@ -281,9 +281,9 @@ function HeroSection() {
 
                 {/* Nearby friends preview */}
                 {[
-                  { name: "Amy L.", club: "ACM Club", dist: "EEB, 2 min", color: "#F4BFDB" },
-                  { name: "Ben T.", club: "Robotics", dist: "CSE, 5 min", color: "#B27092" },
-                  { name: "Lila R.", club: "SHPE", dist: "HUB, 8 min", color: "#DDF3E3" },
+                  { name: "Jesse M.", club: "ACM Club", dist: "EEB, 2 min", color: "#F4BFDB" },
+                  { name: "Jiawen Z.", club: "Robotics", dist: "CSE, 5 min", color: "#B27092" },
+                  { name: "Yumeng M.", club: "SHPE", dist: "HUB, 8 min", color: "#DDF3E3" },
                 ].map((f) => (
                   <div
                     key={f.name}
@@ -818,7 +818,7 @@ function JourneySection() {
     {
       num: "06",
       title: "Digital Prototype",
-      desc: "The final Figma prototype brings WayPoint to life with a complete interactive experience.",
+      desc: "The final digital prototype brings WayPoint to life with a complete interactive experience.",
       img: digitalPrototype,
       emoji: null,
     },
@@ -1142,11 +1142,11 @@ function ImpactSection() {
 
 function TeamSection() {
   const members = [
-    { name: "Keerthana Kompella", role: "UX Researcher", initial: "K" },
-    { name: "Yasmin Corona Gomez", role: "Interaction Designer", initial: "Y" },
-    { name: "Lory Quiroz", role: "Visual Designer", initial: "L" },
-    { name: "Xuan Nhu Tran", role: "Prototype Engineer", initial: "X" },
-    { name: "Hsu Wai Hnin Kyaw", role: "UX Designer", initial: "H" },
+    { name: "Keerthana Kompella", initial: "K" },
+    { name: "Yasmin Corona Gomez", initial: "Y" },
+    { name: "Lory Quiroz", initial: "L" },
+    { name: "Xuan Nhu Tran", initial: "X" },
+    { name: "Hsu Wai Hnin Kyaw", initial: "H" },
   ];
 
   const colors = ["#F4BFDB", "#B27092", "#DDF3E3", "#F4BFDB", "#B27092"];
@@ -1195,12 +1195,9 @@ function TeamSection() {
                 >
                   {m.initial}
                 </div>
-                <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 15, marginBottom: 4 }}>
+                <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 15, marginBottom: 0 }}>
                   {m.name}
                 </h3>
-                <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 13 }}>
-                  {m.role}
-                </p>
                 <div className="flex gap-1 mt-3">
                   {[...Array(5)].map((_, j) => (
                     <Star key={j} size={12} fill="#F4BFDB" style={{ color: "#F4BFDB" }} />

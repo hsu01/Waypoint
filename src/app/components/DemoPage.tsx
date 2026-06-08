@@ -2,31 +2,43 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   MapPin, Users, Calendar, MessageSquare, User, ArrowLeft,
-  CheckCircle, ChevronRight, Send, X, Bell, Search, LogOut
+  CheckCircle, ChevronRight, Send, LogOut,
+  Home, Heart, BookOpen
 } from "lucide-react";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
+const UW_IMAGES = {
+  redSquare: "https://commons.wikimedia.org/wiki/Special:Redirect/file/UW_Red_Square.jpg?width=500",
+  suzzallo: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Entrance%20of%20Suzzallo%20Library.jpg?width=500",
+  cherryBlossoms: "https://commons.wikimedia.org/wiki/Special:Redirect/file/University%20of%20Washington%20Cherry%20Blossoms%20%2833670653331%29.jpg?width=500",
+  kaneHall: "https://commons.wikimedia.org/wiki/Special:Redirect/file/UW_kanehall.jpg?width=500",
+  hub: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Students%20bowling%20in%20Husky%20Union%20Building%20%28HUB%29%2C%20University%20of%20Washington%20%284476181533%29.jpg?width=500",
+};
+
 const CLUBS = [
-  { id: 1, name: "ACM — Computing Club", members: 120, category: "Technology", emoji: "💻" },
-  { id: 2, name: "SHPE — Society of Hispanic Engineers", members: 85, category: "Engineering", emoji: "⚙️" },
-  { id: 3, name: "Robotics Club", members: 60, category: "Engineering", emoji: "🤖" },
-  { id: 4, name: "Photography Society", members: 45, category: "Arts", emoji: "📷" },
-  { id: 5, name: "Hiking & Outdoors Club", members: 200, category: "Recreation", emoji: "🏔️" },
+  { id: 1, name: "ACM — Computing Club", members: 120, category: "Technology", emoji: "💻", image: UW_IMAGES.kaneHall },
+  { id: 2, name: "SHPE — Society of Hispanic Engineers", members: 85, category: "Engineering", emoji: "⚙️", image: UW_IMAGES.redSquare },
+  { id: 3, name: "Robotics Club", members: 60, category: "Engineering", emoji: "🤖", image: UW_IMAGES.suzzallo },
+  { id: 4, name: "Photography Society", members: 45, category: "Arts", emoji: "📷", image: UW_IMAGES.cherryBlossoms },
+  { id: 5, name: "Hiking & Outdoors Club", members: 200, category: "Recreation", emoji: "🏔️", image: UW_IMAGES.redSquare },
 ];
 
 const NEARBY = [
-  { id: 1, name: "Amy Lin", club: "ACM Club", location: "EEB Building", dist: "2 min away", status: "Studying", initials: "AL", color: "#F4BFDB" },
-  { id: 2, name: "Ben Torres", club: "Robotics Club", location: "CSE Building", dist: "5 min away", status: "Working on project", initials: "BT", color: "#B27092" },
-  { id: 3, name: "Lila Reyes", club: "SHPE", location: "HUB Lobby", dist: "8 min away", status: "Getting coffee", initials: "LR", color: "#DDF3E3" },
-  { id: 4, name: "David Kim", club: "ACM Club", location: "Odegaard Library", dist: "12 min away", status: "Available to chat", initials: "DK", color: "#F4BFDB" },
+  { id: 1, name: "Emily", club: "Women in Computing", location: "HUB Cafe", dist: "Same building", status: "Taking a break", initials: "E", color: "#C8C2C4", until: "3:00pm", image: UW_IMAGES.hub },
+  { id: 2, name: "Noah", club: "DubHacks", location: "HUB 2nd floor", dist: "Same building", status: "Working on CS homework!", initials: "N", color: "#C8C2C4", until: "5:00pm", image: UW_IMAGES.kaneHall },
+  { id: 3, name: "Lily", club: "Women in Computing", location: "Suzzallo library 1st floor", dist: "8 min away", status: "Reading for class", initials: "L", color: "#C8C2C4", until: "4:30pm", image: UW_IMAGES.suzzallo },
 ];
 
 const EVENTS = [
-  { id: 1, name: "ACM Tech Talk: AI in Design", date: "Today, 4:00 PM", location: "CSE 305", spots: 12, emoji: "🤖", registered: false },
-  { id: 2, name: "SHPE Networking Night", date: "Fri, June 6 · 6:00 PM", location: "HUB Ballroom", spots: 50, emoji: "🌟", registered: false },
-  { id: 3, name: "Photography Walk: Campus", date: "Sat, June 7 · 10:00 AM", location: "Red Square", spots: 20, emoji: "📷", registered: false },
-  { id: 4, name: "Study Group: CSE 340", date: "Thu, June 5 · 7:00 PM", location: "Allen Library", spots: 8, emoji: "📚", registered: false },
+  { id: 1, name: "Women in STEM Social", date: "Today, 1:00pm - 4:30pm", location: "HUB 2nd floor", people: "Emily, Iris,...", description: "A low-pressure mixer for STEM students to swap class tips, find project partners, and meet mentors between study sessions.", image: UW_IMAGES.hub },
+  { id: 2, name: "Stand-Up Comedy Class Graduatio..", date: "Today, 5:00pm - 6:30pm", location: "HUB", people: "Josh, Alex,...", description: "Student performers share short comedy sets from their final showcase, followed by a casual reception in the HUB.", image: UW_IMAGES.hub },
+  { id: 3, name: "Outdoor Movie Night", date: "Today, 8:00pm - 10:30pm", location: "Red Square", people: "Jack, Evelyn,...", description: "Bring a blanket and meet friends in Red Square for an outdoor screening, snacks, and a relaxed end-of-day hangout.", image: UW_IMAGES.redSquare },
+  { id: 4, name: "DubHacks Project Meetup", date: "Today, 3:30pm - 5:00pm", location: "CSE Atrium", people: "Noah, Lily,...", description: "Hackathon teams compare prototypes, get quick feedback, and find collaborators for campus tech projects.", image: UW_IMAGES.kaneHall },
+  { id: 5, name: "Coffee Chat: Women in Computing", date: "Today, 11:30am - 12:30pm", location: "Suzzallo Cafe", people: "Mina, Priya,...", description: "A small-group coffee chat for students to talk internships, classes, and building community in computing.", image: UW_IMAGES.suzzallo },
+  { id: 6, name: "Design Portfolio Review", date: "Today, 2:00pm - 3:00pm", location: "Art Building", people: "Taylor, Sam,...", description: "Bring a few portfolio pieces for quick critique from peers working across design, HCI, and visual communication.", image: UW_IMAGES.cherryBlossoms },
+  { id: 7, name: "Campus Trail Walk", date: "Today, 4:00pm - 5:30pm", location: "Rainier Vista", people: "Chris, Morgan,...", description: "A short guided walk from central campus with time to meet outdoor club members and plan weekend hikes.", image: UW_IMAGES.redSquare },
+  { id: 8, name: "Late Night Study Group", date: "Today, 9:00pm - 11:00pm", location: "Odegaard Library", people: "Amber, Noah,...", description: "Focused work blocks for CSE and design classes with optional check-ins for anyone who wants accountability.", image: UW_IMAGES.suzzallo },
 ];
 
 // ── Screens ───────────────────────────────────────────────────────────────────
@@ -45,6 +57,8 @@ interface AppState {
   loggedIn: boolean;
   checkedIn: boolean;
   checkInLocation: string;
+  checkInUntil: string;
+  checkInNote: string;
   registeredEvents: number[];
   messageSent: number | null;
   messageText: string;
@@ -55,7 +69,9 @@ const initialState: AppState = {
   loggedIn: false,
   checkedIn: false,
   checkInLocation: "",
-  registeredEvents: [],
+  checkInUntil: "",
+  checkInNote: "",
+  registeredEvents: [1],
   messageSent: null,
   messageText: "",
   myClubs: [1, 2],
@@ -69,91 +85,60 @@ function KioskShell({ screen, onNav, children }: {
   children: React.ReactNode;
 }) {
   const navItems: { id: Screen; icon: React.ReactNode; label: string }[] = [
-    { id: "home", icon: <MapPin size={24} />, label: "Home" },
-    { id: "clubs", icon: <Users size={24} />, label: "Clubs" },
-    { id: "nearby", icon: <Search size={24} />, label: "Nearby" },
-    { id: "events", icon: <Calendar size={24} />, label: "Events" },
-    { id: "profile", icon: <User size={24} />, label: "Profile" },
+    { id: "profile", icon: <User size={34} />, label: "Profile" },
+    { id: "home", icon: <Home size={34} />, label: "Home" },
+    { id: "clubs", icon: <Users size={34} />, label: "Clubs" },
+    { id: "nearby", icon: <MapPin size={34} />, label: "Nearby" },
+    { id: "events", icon: <Calendar size={34} />, label: "Events" },
   ];
 
   return (
-    <div className="flex h-full" style={{ background: "#1a0d12" }}>
+    <div className="flex h-full" style={{ background: "#1F1F1F" }}>
       {/* Left Sidebar Navigation */}
       {screen !== "login" && (
         <div
-          className="flex flex-col w-72 flex-shrink-0"
-          style={{ background: "#512D38", borderRight: "2px solid rgba(244,191,219,0.2)" }}
+          className="flex flex-col w-24 flex-shrink-0"
+          style={{ background: "#5A2E3C" }}
         >
-          {/* Logo */}
-          <div className="px-6 py-6 border-b border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "#F4BFDB" }}>
-                <MapPin size={24} style={{ color: "#512D38" }} />
-              </div>
-              <div>
-                <div style={{ fontFamily: "Poppins, sans-serif", color: "white", fontWeight: 700, fontSize: 20 }}>WayPoint</div>
-                <div style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 12 }}>
-                  UW Campus
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Navigation */}
-          <div className="flex-1 px-4 py-6 flex flex-col gap-2">
+          <div className="flex-1 pt-8 flex flex-col">
             {navItems.map((n) => (
               <button
                 key={n.id}
                 onClick={() => onNav(n.id)}
-                className="flex items-center gap-4 px-5 py-4 rounded-xl transition-all"
+                aria-label={n.label}
+                className="h-20 flex items-center justify-center transition-all"
                 style={{
-                  background: screen === n.id ? "rgba(244,191,219,0.25)" : "transparent",
-                  color: screen === n.id ? "#F4BFDB" : "rgba(255,255,255,0.6)",
-                  border: screen === n.id ? "1px solid rgba(244,191,219,0.4)" : "1px solid transparent",
+                  background: screen === n.id ? "rgba(255,255,255,0.18)" : "transparent",
+                  color: "rgba(255,255,255,0.84)",
                 }}
               >
                 {n.icon}
-                <span style={{ fontFamily: "Poppins, sans-serif", fontSize: 16, fontWeight: screen === n.id ? 600 : 500 }}>
-                  {n.label}
-                </span>
               </button>
             ))}
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-4 border-t border-white/10">
-            <div className="flex items-center gap-2">
-              <Bell size={18} style={{ color: "rgba(255,255,255,0.5)" }} />
-              <span style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.5)", fontSize: 13 }}>
-                Notifications
-              </span>
-            </div>
+          <div className="h-20 flex items-center justify-center">
+            <LogOut size={38} style={{ color: "#FFD439" }} />
           </div>
         </div>
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col" style={{ background: "#FFF9FC" }}>
+      <div className="flex-1 flex flex-col" style={{ background: "#FFFFFF" }}>
         {/* Top Header Bar */}
         {screen !== "login" && (
           <div
             className="flex items-center justify-between px-8 py-5 flex-shrink-0"
-            style={{ background: "white", borderBottom: "1px solid rgba(81,45,56,0.08)" }}
+            style={{ background: "#5A2E3C", borderBottom: "1px solid rgba(0,0,0,0.2)" }}
           >
-            <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#512D38", fontSize: 24 }}>
-              {screen === "home" && "Dashboard"}
-              {screen === "clubs" && "My Clubs"}
-              {screen === "checkin" && "Check In"}
-              {screen === "nearby" && "Nearby Friends"}
-              {screen === "messaging" && "Messages"}
-              {screen === "events" && "Events"}
-              {screen === "profile" && "Profile"}
+            <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: 22 }}>
+              University of Washington
             </h2>
-            <div className="flex items-center gap-3">
-              <span style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14 }}>
-                University of Washington
-              </span>
-            </div>
+            <span style={{ fontFamily: "Inter, sans-serif", color: "white", fontSize: 18 }}>
+              Monday, Jun 1 | 10 : 00 AM
+            </span>
           </div>
         )}
 
@@ -259,125 +244,63 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
 
 // ── Home Screen ───────────────────────────────────────────────────────────────
 
-function HomeScreen({ state, onNav }: { state: AppState; onNav: (s: Screen) => void }) {
-  const quickActions = [
-    { screen: "checkin" as Screen, icon: <MapPin size={28} />, label: "Check In", color: "#512D38" },
-    { screen: "nearby" as Screen, icon: <Users size={28} />, label: "Nearby", color: "#B27092" },
-    { screen: "events" as Screen, icon: <Calendar size={28} />, label: "Events", color: "#F4BFDB" },
-    { screen: "messaging" as Screen, icon: <MessageSquare size={28} />, label: "Message", color: "#DDF3E3" },
+function HomeScreen({ onNav }: { onNav: (s: Screen) => void }) {
+  const homeCards = [
+    {
+      screen: "clubs" as Screen,
+      icon: <Users size={34} />,
+      title: "Clubs",
+      body: "Review list of academic and social clubs you belong to, see member directory, browse campus recommendations, and register.",
+    },
+    {
+      screen: "nearby" as Screen,
+      icon: <MapPin size={36} />,
+      title: "Nearby Friends",
+      body: "Check-in at your current location, discover all the club peers in the same building, and email them instantly",
+    },
+    {
+      screen: "events" as Screen,
+      icon: <Calendar size={34} />,
+      title: "Events",
+      body: "View live campus events happening today, explore the full schedule across campus community",
+    },
+    {
+      screen: "profile" as Screen,
+      icon: <User size={34} />,
+      title: "Profile",
+      body: "Manage your personal information",
+    },
   ];
 
   return (
-    <div className="p-8">
-      {/* Welcome Banner */}
-      <div
-        className="rounded-3xl p-8 mb-8"
-        style={{ background: "linear-gradient(135deg, #512D38, #7a3f52)" }}
-      >
-        <p style={{ fontFamily: "Inter, sans-serif", color: "#F4BFDB", fontSize: 15, marginBottom: 8 }}>Good afternoon 👋</p>
-        <h2 style={{ fontFamily: "Poppins, sans-serif", color: "white", fontWeight: 700, fontSize: 32 }}>Welcome, Finder!</h2>
-        {state.checkedIn && (
-          <div
-            className="mt-4 flex items-center gap-2 px-4 py-2 rounded-full w-fit"
-            style={{ background: "rgba(221,243,227,0.25)" }}
+    <div className="px-16 py-14">
+      <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 28, marginBottom: 46 }}>
+        Welcome, Amber!
+      </h2>
+
+      <div className="grid grid-cols-2 gap-x-28 gap-y-14 max-w-4xl">
+        {homeCards.map((card) => (
+          <button
+            key={card.title}
+            onClick={() => onNav(card.screen)}
+            className="text-left rounded-2xl px-8 py-7 min-h-[132px]"
+            style={{
+              background: "#EFE5E7",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              color: "#111",
+            }}
           >
-            <CheckCircle size={16} style={{ color: "#DDF3E3" }} />
-            <span style={{ fontFamily: "Inter, sans-serif", color: "#DDF3E3", fontSize: 14 }}>
-              Checked in · {state.checkInLocation}
-            </span>
-          </div>
-        )}
-      </div>
-
-      <div className="grid grid-cols-2 gap-8">
-        {/* Left Column */}
-        <div>
-          {/* Quick actions */}
-          <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 20, marginBottom: 16 }}>Quick Actions</h3>
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            {quickActions.map((a) => (
-              <button
-                key={a.label}
-                onClick={() => onNav(a.screen)}
-                className="flex flex-col items-center gap-3 p-6 rounded-2xl"
-                style={{ background: "#F8F4F6" }}
-              >
-                <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center"
-                  style={{ background: a.color, color: a.color === "#F4BFDB" || a.color === "#DDF3E3" ? "#512D38" : "white" }}
-                >
-                  {a.icon}
-                </div>
-                <span style={{ fontFamily: "Poppins, sans-serif", fontSize: 15, color: "#2B2B2B", fontWeight: 600 }}>{a.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Events preview */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 20 }}>Upcoming Events</h3>
-              <button onClick={() => onNav("events")} style={{ fontFamily: "Inter, sans-serif", color: "#512D38", fontSize: 14, fontWeight: 500 }}>See all →</button>
+            <div className="flex items-center gap-4 mb-4" style={{ color: "#5A2E3C" }}>
+              {card.icon}
+              <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 24 }}>
+                {card.title}
+              </h3>
             </div>
-            <div className="flex flex-col gap-3">
-              {EVENTS.slice(0, 2).map((ev) => (
-                <div
-                  key={ev.id}
-                  className="p-4 rounded-2xl flex items-center gap-4"
-                  style={{ background: "white", border: "1px solid rgba(81,45,56,0.08)" }}
-                >
-                  <span className="text-3xl">{ev.emoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 15 }}>{ev.name}</p>
-                    <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 13, marginTop: 2 }}>{ev.date} · {ev.location}</p>
-                  </div>
-                  <div
-                    className="px-3 py-1 rounded-full text-xs font-semibold"
-                    style={{ background: "#DDF3E3", color: "#2B2B2B", fontFamily: "Inter, sans-serif" }}
-                  >
-                    Today
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column - Nearby friends */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 20 }}>Nearby Friends</h3>
-            <button onClick={() => onNav("nearby")} style={{ fontFamily: "Inter, sans-serif", color: "#512D38", fontSize: 14, fontWeight: 500 }}>See all →</button>
-          </div>
-          {NEARBY.map((f) => (
-            <div
-              key={f.id}
-              className="flex items-center gap-4 p-5 rounded-2xl mb-3"
-              style={{ background: "white", border: "1px solid rgba(81,45,56,0.08)" }}
-            >
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center font-bold flex-shrink-0"
-                style={{ background: f.color, color: "#512D38", fontFamily: "Poppins, sans-serif", fontSize: 18 }}
-              >
-                {f.initials}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 16 }}>{f.name}</p>
-                <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 13 }}>{f.club}</p>
-                <p style={{ fontFamily: "Inter, sans-serif", color: "#B27092", fontSize: 13, marginTop: 2 }}>
-                  📍 {f.location} · {f.dist}
-                </p>
-              </div>
-              <button
-                onClick={() => onNav("messaging")}
-                className="px-4 py-2 rounded-xl text-sm font-semibold"
-                style={{ background: "#F8F4F6", color: "#512D38", fontFamily: "Poppins, sans-serif" }}
-              >
-                Say Hi
-              </button>
-            </div>
-          ))}
-        </div>
+            <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 12, lineHeight: 1.2, maxWidth: 300 }}>
+              {card.body}
+            </p>
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -405,7 +328,18 @@ function ClubsScreen({ state, setState }: { state: AppState; setState: (s: AppSt
                 className="p-5 rounded-2xl flex items-center gap-4"
                 style={{ background: "white", border: "2px solid rgba(81,45,56,0.15)" }}
               >
-                <span className="text-3xl">{club.emoji}</span>
+                <div
+                  className="w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden text-2xl"
+                  style={{
+                    backgroundImage: `linear-gradient(rgba(81,45,56,0.18), rgba(81,45,56,0.18)), url(${club.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    color: "white",
+                    textShadow: "0 1px 4px rgba(0,0,0,0.45)",
+                  }}
+                >
+                  {club.emoji}
+                </div>
                 <div className="flex-1">
                   <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 17 }}>{club.name}</p>
                   <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14 }}>{club.members} members · {club.category}</p>
@@ -428,7 +362,18 @@ function ClubsScreen({ state, setState }: { state: AppState; setState: (s: AppSt
                 className="p-5 rounded-2xl flex items-center gap-4"
                 style={{ background: "#F8F4F6", border: "1px solid rgba(81,45,56,0.08)" }}
               >
-                <span className="text-3xl">{club.emoji}</span>
+                <div
+                  className="w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden text-2xl"
+                  style={{
+                    backgroundImage: `linear-gradient(rgba(81,45,56,0.16), rgba(81,45,56,0.16)), url(${club.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    color: "white",
+                    textShadow: "0 1px 4px rgba(0,0,0,0.45)",
+                  }}
+                >
+                  {club.emoji}
+                </div>
                 <div className="flex-1">
                   <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 17 }}>{club.name}</p>
                   <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14 }}>{club.members} members · {club.category}</p>
@@ -464,13 +409,19 @@ function CheckInScreen({ state, setState, onNav }: { state: AppState; setState: 
   const [done, setDone] = useState(false);
 
   const checkIn = (loc: string) => {
-    setState({ ...state, checkedIn: true, checkInLocation: loc });
+    setState({
+      ...state,
+      checkedIn: true,
+      checkInLocation: loc,
+      checkInUntil: "4:30pm",
+      checkInNote: "Working on CSE440 Homework",
+    });
     setDone(true);
     setTimeout(() => onNav("nearby"), 1800);
   };
 
   const checkOut = () => {
-    setState({ ...state, checkedIn: false, checkInLocation: "" });
+    setState({ ...state, checkedIn: false, checkInLocation: "", checkInUntil: "", checkInNote: "" });
     setDone(false);
   };
 
@@ -542,72 +493,206 @@ function CheckInScreen({ state, setState, onNav }: { state: AppState; setState: 
 
 // ── Nearby Screen ─────────────────────────────────────────────────────────────
 
-function NearbyScreen({ state, onNav, onMessage }: { state: AppState; onNav: (s: Screen) => void; onMessage: (id: number) => void }) {
+function NearbyScreen({ state, setState, onMessage }: { state: AppState; setState: (s: AppState) => void; onMessage: (id: number) => void }) {
+  const [location, setLocation] = useState(state.checkInLocation || "HUB");
+  const [until, setUntil] = useState(state.checkInUntil || "");
+  const [note, setNote] = useState(state.checkInNote || "");
+  const checkedIn = state.checkedIn;
+
+  const checkIn = () => {
+    setState({
+      ...state,
+      checkedIn: true,
+      checkInLocation: location || "HUB",
+      checkInUntil: until || "4:30pm",
+      checkInNote: note || "Working on CSE440 Homework",
+    });
+  };
+
+  const checkOut = () => {
+    setState({
+      ...state,
+      checkedIn: false,
+      checkInLocation: "",
+      checkInUntil: "",
+      checkInNote: "",
+    });
+    setLocation("HUB");
+    setUntil("");
+    setNote("");
+  };
+
+  const sameBuilding = NEARBY.filter((f) => f.dist === "Same building");
+
   return (
     <div className="p-8">
-      <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 15, marginBottom: 24 }}>
-        Club peers checked in nearby right now
-      </p>
+      <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 28, marginBottom: 28 }}>
+        Club Peers Check-In Nearby
+      </h3>
 
-      {!state.checkedIn && (
-        <div
-          className="mb-6 p-5 rounded-2xl flex items-center gap-4"
-          style={{ background: "#F8F4F6", border: "1px solid rgba(81,45,56,0.15)" }}
-        >
-          <MapPin size={24} style={{ color: "#512D38" }} />
-          <div className="flex-1">
-            <span style={{ fontFamily: "Poppins, sans-serif", color: "#2B2B2B", fontSize: 16, fontWeight: 600 }}>
-              Check in to let others see you too
-            </span>
+      {!checkedIn ? (
+        <div className="grid grid-cols-[0.9fr_1.4fr] gap-8">
+          <div
+            className="rounded-2xl p-7"
+            style={{ background: "#EFE5E7", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" }}
+          >
+            <h4 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 17, textAlign: "center", marginBottom: 26 }}>
+              Check-in to connect with your clubs peers
+            </h4>
+
+            <label style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 14, fontWeight: 600 }}>
+              Your location:
+            </label>
+            <select
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="w-full mt-2 mb-6 px-4 py-2 rounded-full outline-none"
+              style={{ background: "white", border: "1px solid #B9B0B2", fontFamily: "Inter, sans-serif", color: "#512D38" }}
+            >
+              <option>HUB</option>
+              <option>CSE Building</option>
+              <option>Odegaard Library</option>
+              <option>Suzzallo Library</option>
+              <option>Red Square</option>
+            </select>
+
+            <label style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 14, fontWeight: 600 }}>
+              How long will you stay?
+            </label>
+            <input
+              value={until}
+              onChange={(e) => setUntil(e.target.value)}
+              placeholder="e.g. Until 4:30 pm"
+              className="w-full mt-2 mb-6 px-4 py-2 rounded-full outline-none"
+              style={{ background: "white", border: "1px solid #B9B0B2", fontFamily: "Inter, sans-serif", color: "#512D38" }}
+            />
+
+            <label style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 14, fontWeight: 600 }}>
+              Check-In Activity Note:
+            </label>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="e.g. Working on CSE440 Homework"
+              className="w-full mt-2 mb-6 px-4 py-3 rounded-2xl outline-none resize-none"
+              style={{ background: "white", border: "1px solid #B9B0B2", fontFamily: "Inter, sans-serif", color: "#512D38", minHeight: 84 }}
+            />
+
+            <button
+              onClick={checkIn}
+              className="block mx-auto px-10 py-3 rounded-full font-semibold"
+              style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 14 }}
+            >
+              Check-In
+            </button>
           </div>
-          <button
-            onClick={() => onNav("checkin")}
-            className="px-6 py-3 rounded-xl font-semibold"
-            style={{ background: "#512D38", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 14 }}
-          >
-            Check In Now
-          </button>
-        </div>
-      )}
 
-      <div className="grid grid-cols-2 gap-5">
-        {NEARBY.map((f) => (
-          <motion.div
-            key={f.id}
-            whileHover={{ y: -4 }}
-            className="p-6 rounded-2xl flex flex-col gap-4"
-            style={{ background: "white", border: "1px solid rgba(81,45,56,0.08)", boxShadow: "0 4px 12px rgba(81,45,56,0.06)" }}
+          <div
+            className="rounded-2xl flex flex-col items-center justify-center text-center p-10"
+            style={{ background: "#EFE5E7", boxShadow: "0 2px 8px rgba(0,0,0,0.18)", minHeight: 380 }}
           >
-            <div className="flex items-center gap-4">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center font-bold flex-shrink-0"
-                style={{ background: f.color, color: "#512D38", fontFamily: "Poppins, sans-serif", fontSize: 20 }}
-              >
-                {f.initials}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 18 }}>{f.name}</p>
-                <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14 }}>{f.club}</p>
-              </div>
+            <MapPin size={58} style={{ color: "#5A2E3C", marginBottom: 28 }} />
+            <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 22, lineHeight: 1.25, maxWidth: 360 }}>
+              Please check-in to view club members nearby
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-[0.9fr_1.4fr] gap-8 items-start">
+          <div
+            className="rounded-2xl p-8"
+            style={{ background: "#EFE5E7", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" }}
+          >
+            <div
+              className="mx-auto mb-10 px-5 py-2 rounded-md text-center"
+              style={{ background: "#A8F0B0", color: "#111", fontFamily: "Poppins, sans-serif", fontWeight: 700, width: "fit-content" }}
+            >
+              Check-in Successful!
             </div>
-            <div>
-              <p style={{ fontFamily: "Inter, sans-serif", color: "#B27092", fontSize: 14, marginBottom: 4 }}>
-                📍 {f.location} · {f.dist}
-              </p>
-              <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 13, fontStyle: "italic" }}>
-                "{f.status}"
+            <div style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 15, lineHeight: 1.9 }}>
+              <p>Your location: {state.checkInLocation}</p>
+              <p>You Will Stay: Until {state.checkInUntil}</p>
+              <p>Check-In Activity Note:</p>
+              <p style={{ color: "#8B8587", fontStyle: "italic", fontSize: 13 }}>
+                "{state.checkInNote}"
               </p>
             </div>
             <button
-              onClick={() => onMessage(f.id)}
-              className="w-full px-4 py-3 rounded-xl font-semibold flex items-center justify-center gap-2"
-              style={{ background: "#F8F4F6", color: "#512D38", fontFamily: "Poppins, sans-serif", fontSize: 14 }}
+              onClick={checkOut}
+              className="block mx-auto mt-8 px-10 py-3 rounded-full font-semibold"
+              style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 14 }}
             >
-              <MessageSquare size={16} /> Send Message
+              Check-Out
             </button>
-          </motion.div>
-        ))}
-      </div>
+          </div>
+
+          <div>
+            <div className="flex justify-center gap-4 mb-5">
+              <button
+                className="px-16 py-3 rounded-xl font-semibold"
+                style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", boxShadow: "0 2px 6px rgba(0,0,0,0.18)" }}
+              >
+                All ({NEARBY.length})
+              </button>
+              <button
+                className="px-10 py-3 rounded-xl font-semibold"
+                style={{ background: "#EFE5E7", color: "#111", fontFamily: "Poppins, sans-serif", boxShadow: "0 2px 6px rgba(0,0,0,0.14)" }}
+              >
+                Same Building ({sameBuilding.length})
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              {NEARBY.map((f) => (
+                <motion.div
+                  key={f.id}
+                  whileHover={{ y: -3 }}
+                  className="rounded-2xl p-5 flex items-center gap-5"
+                  style={{ background: "#EFE5E7", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" }}
+                >
+                  <div
+                    className="w-14 h-14 rounded-full flex items-center justify-center font-bold flex-shrink-0 overflow-hidden"
+                    style={{
+                      backgroundImage: `linear-gradient(rgba(90,46,60,0.2), rgba(90,46,60,0.2)), url(${f.image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      color: "white",
+                      fontFamily: "Poppins, sans-serif",
+                      fontSize: 18,
+                      textShadow: "0 1px 5px rgba(0,0,0,0.7)",
+                    }}
+                  >
+                    {f.initials}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 15 }}>{f.name}</p>
+                    <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 12 }}>👥 {f.club}</p>
+                    <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 12 }}>📍 {f.location}</p>
+                    <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 12 }}>🕒 Here until {f.until}</p>
+                    <p style={{ fontFamily: "Inter, sans-serif", color: "#5A2E3C", fontSize: 12, fontStyle: "italic", marginTop: 4 }}>
+                      "{f.status}"
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => onMessage(f.id)}
+                    className="px-8 py-3 rounded-full font-semibold"
+                    style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 12 }}
+                  >
+                    Message
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+
+            <button
+              className="block mx-auto mt-5 underline"
+              style={{ color: "#5A2E3C", fontFamily: "Inter, sans-serif", fontSize: 15 }}
+            >
+              View All Friends ...
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -629,10 +714,20 @@ function MessagingScreen({ state, setState, targetId }: { state: AppState; setSt
     <div className="p-8 h-full flex flex-col">
       <div className="max-w-4xl mx-auto w-full flex flex-col h-full">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-200">
+        <div
+          className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-200"
+        >
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center font-bold"
-            style={{ background: target.color, color: "#512D38", fontFamily: "Poppins, sans-serif", fontSize: 20 }}
+            style={{
+              backgroundImage: `linear-gradient(rgba(81,45,56,0.22), rgba(81,45,56,0.22)), url(${target.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              color: "white",
+              fontFamily: "Poppins, sans-serif",
+              fontSize: 20,
+              textShadow: "0 1px 5px rgba(0,0,0,0.7)",
+            }}
           >
             {target.initials}
           </div>
@@ -743,208 +838,367 @@ function MessagingScreen({ state, setState, targetId }: { state: AppState; setSt
 // ── Events Screen ─────────────────────────────────────────────────────────────
 
 function EventsScreen({ state, setState }: { state: AppState; setState: (s: AppState) => void }) {
-  const [selected, setSelected] = useState<number | null>(null);
-  const [confirmed, setConfirmed] = useState<number | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<number | null>(null);
+  const [view, setView] = useState<"all" | "today" | "active">("today");
 
   const register = (id: number) => {
+    if (state.registeredEvents.includes(id)) return;
     setState({ ...state, registeredEvents: [...state.registeredEvents, id] });
-    setConfirmed(id);
-    setTimeout(() => { setConfirmed(null); setSelected(null); }, 1800);
   };
 
-  const unregister = (id: number) => {
-    setState({ ...state, registeredEvents: state.registeredEvents.filter((e) => e !== id) });
+  const confirmCancel = () => {
+    if (cancelTarget === null) return;
+    setState({ ...state, registeredEvents: state.registeredEvents.filter((e) => e !== cancelTarget) });
+    setCancelTarget(null);
   };
+
+  const visibleEvents = view === "active"
+    ? EVENTS.filter((ev) => state.registeredEvents.includes(ev.id))
+    : EVENTS;
 
   return (
-    <div className="p-8">
-      <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 15, marginBottom: 24 }}>
-        Upcoming events from your clubs and campus
-      </p>
+    <div className="relative h-full">
+      <div
+        className="h-full px-7 py-7 overflow-y-auto"
+        style={{ filter: cancelTarget !== null ? "blur(10px)" : "none", transition: "filter 180ms ease" }}
+      >
+        <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 28, marginBottom: 22 }}>
+          Campus Events
+        </h2>
 
-      <div className="grid grid-cols-2 gap-5">
-        {EVENTS.map((ev) => {
-          const isRegistered = state.registeredEvents.includes(ev.id);
-          const isConfirmed = confirmed === ev.id;
-
-          return (
-            <motion.div
-              key={ev.id}
-              layout
-              className="rounded-2xl overflow-hidden"
-              style={{ background: "white", border: "1px solid rgba(81,45,56,0.1)", boxShadow: "0 4px 16px rgba(81,45,56,0.06)" }}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex gap-3">
+            <button
+              onClick={() => setView("all")}
+              className="px-12 py-3 rounded-xl font-semibold"
+              style={{
+                background: view === "all" ? "#5A2E3C" : "#EFE5E7",
+                color: view === "all" ? "white" : "#111",
+                fontFamily: "Poppins, sans-serif",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
+              }}
             >
-              <div
-                className="p-6 flex flex-col gap-3 cursor-pointer"
-                onClick={() => setSelected(selected === ev.id ? null : ev.id)}
+              All Events ({EVENTS.length})
+            </button>
+            <button
+              onClick={() => setView("today")}
+              className="px-10 py-3 rounded-xl font-semibold"
+              style={{
+                background: view === "today" ? "#5A2E3C" : "#EFE5E7",
+                color: view === "today" ? "white" : "#111",
+                fontFamily: "Poppins, sans-serif",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
+              }}
+            >
+              Today's Events (3)
+            </button>
+          </div>
+          <button
+            onClick={() => setView("active")}
+            className="px-9 py-3 rounded-xl font-semibold"
+            style={{
+              background: view === "active" ? "#5A2E3C" : "#EFE5E7",
+              color: view === "active" ? "white" : "#111",
+              fontFamily: "Poppins, sans-serif",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.18)",
+            }}
+          >
+            My Active RSVPs
+          </button>
+        </div>
+
+        <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 15, fontWeight: 700, marginBottom: 12 }}>
+          Today&nbsp; | &nbsp;Monday, June 1
+        </p>
+
+        <div className="flex flex-col gap-3">
+          {visibleEvents.map((ev) => {
+            const isRegistered = state.registeredEvents.includes(ev.id);
+
+            return (
+              <motion.div
+                key={ev.id}
+                layout
+                className="rounded-2xl px-4 py-4 flex items-center gap-7"
+                style={{ background: "#EFE5E7", boxShadow: "0 2px 7px rgba(0,0,0,0.18)" }}
               >
-                <div className="flex items-start gap-4">
-                  <span className="text-4xl">{ev.emoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 18 }}>
-                      {ev.name}
-                    </p>
-                    <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14, marginTop: 4 }}>
-                      {ev.date}
-                    </p>
-                    <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14, marginTop: 2 }}>
-                      📍 {ev.location}
-                    </p>
-                  </div>
+                <div
+                  className="w-36 h-24 rounded-xl flex-shrink-0 overflow-hidden"
+                  style={{
+                    backgroundImage: `linear-gradient(rgba(90,46,60,0.08), rgba(90,46,60,0.08)), url(${ev.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.35)",
+                  }}
+                />
+                <div className="flex-1 min-w-0">
+                  <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 23, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {ev.name}
+                  </h3>
+                  <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 12, marginTop: 3 }}>📍 {ev.location}</p>
+                  <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 12 }}>◷ {ev.date.replace("Today, ", "")}</p>
+                  <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 12 }}>👥 People coming: {ev.people}</p>
+                  <p style={{ fontFamily: "Inter, sans-serif", color: "#5A2E3C", fontSize: 12, fontStyle: "italic", marginTop: 10 }}>
+                    "{ev.description}"
+                  </p>
                 </div>
-
-                <div className="flex items-center justify-between">
-                  {isRegistered ? (
-                    <div
-                      className="px-3 py-1.5 rounded-full font-semibold"
-                      style={{ background: "#DDF3E3", color: "#2B2B2B", fontFamily: "Poppins, sans-serif", fontSize: 13 }}
-                    >
-                      ✓ RSVP'd
-                    </div>
-                  ) : (
-                    <div
-                      className="px-3 py-1.5 rounded-full"
-                      style={{ background: "#F8F4F6", color: "#717182", fontFamily: "Inter, sans-serif", fontSize: 13 }}
-                    >
-                      {ev.spots} spots available
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <AnimatePresence>
-                {selected === ev.id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden"
+                {isRegistered ? (
+                  <button
+                    onClick={() => setCancelTarget(ev.id)}
+                    className="px-8 py-3 rounded-2xl font-semibold"
+                    style={{ background: "#FCE7F0", color: "#111", border: "1px solid #8D4A64", fontFamily: "Poppins, sans-serif", fontSize: 14 }}
                   >
-                    <div
-                      className="px-6 pb-6"
-                      style={{ borderTop: "1px solid rgba(81,45,56,0.08)" }}
-                    >
-                      <div style={{ paddingTop: 16 }}>
-                        {isConfirmed ? (
-                          <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            className="flex items-center gap-2"
-                            style={{ color: "#512D38", fontFamily: "Poppins, sans-serif", fontSize: 16, fontWeight: 600 }}
-                          >
-                            <CheckCircle size={20} /> You're registered!
-                          </motion.div>
-                        ) : isRegistered ? (
-                          <button
-                            onClick={() => unregister(ev.id)}
-                            className="px-5 py-2.5 rounded-xl"
-                            style={{ background: "#F8F4F6", color: "#717182", fontFamily: "Inter, sans-serif", fontSize: 14 }}
-                          >
-                            Cancel Registration
-                          </button>
-                        ) : (
-                          <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={() => register(ev.id)}
-                            className="w-full px-6 py-3 rounded-xl font-semibold"
-                            style={{ background: "#512D38", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 15 }}
-                          >
-                            Register Now
-                          </motion.button>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
+                    Cancel RSVP
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => register(ev.id)}
+                    className="px-8 py-3 rounded-2xl font-semibold"
+                    style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 14 }}
+                  >
+                    Add to My RSVPs
+                  </button>
                 )}
-              </AnimatePresence>
-            </motion.div>
-          );
-        })}
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
+
+      <AnimatePresence>
+        {cancelTarget !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ background: "rgba(255,255,255,0.16)" }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.96 }}
+              className="rounded-md px-16 py-14"
+              style={{ background: "white", boxShadow: "0 3px 12px rgba(0,0,0,0.35)", width: 440 }}
+            >
+              <p style={{ fontFamily: "Poppins, sans-serif", color: "#111", fontSize: 22, fontWeight: 700, textAlign: "center", marginBottom: 38 }}>
+                Do you want to cancel this event?
+              </p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => setCancelTarget(null)}
+                  className="px-12 py-2 rounded-md font-semibold"
+                  style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", minWidth: 122 }}
+                >
+                  No
+                </button>
+                <button
+                  onClick={confirmCancel}
+                  className="px-12 py-2 rounded-md font-semibold"
+                  style={{ background: "#EFE5E7", color: "#111", border: "1px solid #A78B95", fontFamily: "Poppins, sans-serif", minWidth: 122 }}
+                >
+                  Yes
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 // ── Profile Screen ────────────────────────────────────────────────────────────
 
-function ProfileScreen({ state, onLogout }: { state: AppState; onLogout: () => void }) {
-  return (
-    <div className="p-8">
-      <div className="grid grid-cols-3 gap-8">
-        {/* Profile column */}
-        <div>
-          {/* Profile header */}
-          <div
-            className="rounded-3xl p-8 mb-6 flex flex-col items-center"
-            style={{ background: "linear-gradient(135deg, #512D38, #7a3f52)" }}
-          >
-            <div
-              className="w-24 h-24 rounded-full flex items-center justify-center font-bold mb-4"
-              style={{ background: "#F4BFDB", color: "#512D38", fontFamily: "Poppins, sans-serif", fontSize: 32 }}
-            >
-              JS
-            </div>
-            <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: 24 }}>Jordan Smith</h3>
-            <p style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.7)", fontSize: 15, marginTop: 4 }}>jsmith23@uw.edu</p>
-            <p style={{ fontFamily: "Inter, sans-serif", color: "rgba(255,255,255,0.6)", fontSize: 14, marginTop: 4 }}>
-              Computer Science · Junior
-            </p>
-          </div>
+function ProfileScreen({ onLogout }: { onLogout: () => void }) {
+  const [hobbies, setHobbies] = useState(["Reading", "Hiking", "Photography", "Coffee"]);
+  const [editingHobbies, setEditingHobbies] = useState(false);
+  const [newHobby, setNewHobby] = useState("");
+  const classes = [
+    "CSE 440 - Introduction to HCI",
+    "CSE 333 - Systems Programming",
+    "CSE 457 - Computer Graphics",
+    "EDSPE 422 - (dis) Ability, Education, and the Arts",
+  ];
+  const registeredClubs = [
+    "Women in Computing",
+    "DubHacks",
+  ];
 
-          {/* Stats */}
-          <div className="flex flex-col gap-3">
-            {[
-              { val: state.myClubs.length, label: "Clubs Joined" },
-              { val: state.registeredEvents.length, label: "Events Registered" },
-              { val: state.checkedIn ? "Active" : "Offline", label: "Current Status" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="p-5 rounded-2xl flex items-center justify-between"
-                style={{ background: "#F8F4F6" }}
-              >
-                <div style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14 }}>{s.label}</div>
-                <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#512D38", fontSize: 24 }}>{s.val}</div>
-              </div>
+  const addHobby = () => {
+    const hobby = newHobby.trim();
+    if (!hobby || hobbies.some((item) => item.toLowerCase() === hobby.toLowerCase())) return;
+    setHobbies([...hobbies, hobby]);
+    setNewHobby("");
+  };
+
+  const removeHobby = (hobby: string) => {
+    setHobbies(hobbies.filter((item) => item !== hobby));
+  };
+
+  return (
+    <div className="px-7 py-7">
+      <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 28, marginBottom: 24 }}>
+        My Profile
+      </h2>
+
+      <div className="grid grid-cols-[1.4fr_1fr] gap-5">
+        <div
+          className="rounded-2xl p-8 flex gap-8"
+          style={{ background: "#EFE5E7" }}
+        >
+          <div
+            className="w-24 h-24 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden"
+            style={{
+              backgroundImage: `linear-gradient(rgba(90,46,60,0.18), rgba(90,46,60,0.18)), url(${UW_IMAGES.cherryBlossoms})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              color: "white",
+              fontFamily: "Poppins, sans-serif",
+              fontWeight: 700,
+              fontSize: 24,
+              textShadow: "0 1px 6px rgba(0,0,0,0.7)",
+            }}
+          >
+            AJ
+          </div>
+          <div className="flex-1">
+            <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 26 }}>
+              Amber J
+            </h3>
+            <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 13, marginBottom: 14 }}>
+              amber002@uw.edu
+            </p>
+            <div style={{ borderTop: "1px solid #A78B95", paddingTop: 14 }}>
+              <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 13, marginBottom: 12 }}>
+                Major: Computer Engineering
+              </p>
+              <p style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 13 }}>
+                Class year: Junior
+              </p>
+            </div>
+            <div style={{ borderTop: "1px solid #A78B95", marginTop: 14, paddingTop: 14 }}>
+              <p style={{ fontFamily: "Inter, sans-serif", color: "#5A2E3C", fontSize: 13, fontStyle: "italic" }}>
+                "About me...."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="rounded-2xl p-6"
+          style={{ background: "#EFE5E7" }}
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <BookOpen size={24} style={{ color: "#5A2E3C" }} />
+            <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 18 }}>
+              Classes
+            </h3>
+          </div>
+          <div className="flex flex-col gap-5">
+            {classes.map((item) => (
+              <p key={item} style={{ fontFamily: "Inter, sans-serif", color: "#111", fontSize: 15, lineHeight: 1.25 }}>
+                {item}
+              </p>
             ))}
           </div>
         </div>
 
-        {/* Settings columns */}
-        <div className="col-span-2">
-          <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 20, marginBottom: 16 }}>
-            Settings & Preferences
-          </h3>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { label: "My Clubs", sub: `${state.myClubs.length} clubs joined`, emoji: "👥" },
-              { label: "Privacy Settings", sub: "Who can see your location", emoji: "🔒" },
-              { label: "Notification Preferences", sub: "Manage alerts", emoji: "🔔" },
-              { label: "Help & Support", sub: "FAQ and contact", emoji: "💬" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="p-5 rounded-2xl flex items-start gap-4"
-                style={{ background: "white", border: "1px solid rgba(81,45,56,0.08)" }}
+        <div
+          className="rounded-2xl p-6"
+          style={{ background: "#EFE5E7" }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Heart size={24} style={{ color: "#5A2E3C" }} />
+              <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 18 }}>
+                Hobbies
+              </h3>
+            </div>
+            <button
+              onClick={() => setEditingHobbies(!editingHobbies)}
+              style={{ fontFamily: "Inter, sans-serif", color: "#5A2E3C", fontSize: 12, fontWeight: 700 }}
+            >
+              {editingHobbies ? "Done" : "Edit"}
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            {hobbies.map((hobby) => (
+              <span
+                key={hobby}
+                className="px-5 py-2 rounded-full text-center flex items-center gap-2"
+                style={{ background: "#5A2E3C", color: "white", fontFamily: "Inter, sans-serif", fontSize: 12, minWidth: 92 }}
               >
-                <span className="text-2xl">{item.emoji}</span>
-                <div className="flex-1">
-                  <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 16 }}>{item.label}</p>
-                  <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14, marginTop: 4 }}>{item.sub}</p>
-                </div>
-                <ChevronRight size={18} style={{ color: "#717182" }} />
-              </div>
+                {hobby}
+                {editingHobbies && (
+                  <button
+                    onClick={() => removeHobby(hobby)}
+                    aria-label={`Remove ${hobby}`}
+                    className="w-4 h-4 rounded-full flex items-center justify-center"
+                    style={{ background: "rgba(255,255,255,0.22)", color: "white", fontSize: 10, lineHeight: 1 }}
+                  >
+                    x
+                  </button>
+                )}
+              </span>
             ))}
           </div>
+          {editingHobbies && (
+            <div className="mt-5 flex gap-3">
+              <input
+                value={newHobby}
+                onChange={(e) => setNewHobby(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addHobby()}
+                placeholder="Add a hobby"
+                className="flex-1 px-4 py-2 rounded-full outline-none"
+                style={{ background: "white", border: "1px solid #B9B0B2", color: "#111", fontFamily: "Inter, sans-serif", fontSize: 13 }}
+              />
+              <button
+                onClick={addHobby}
+                className="px-5 py-2 rounded-full font-semibold"
+                style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 12 }}
+              >
+                Add
+              </button>
+            </div>
+          )}
+        </div>
 
+        <div
+          className="rounded-2xl p-6"
+          style={{ background: "#EFE5E7" }}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <Users size={24} style={{ color: "#5A2E3C" }} />
+            <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 18 }}>
+              Register Clubs
+            </h3>
+          </div>
+          <div className="flex flex-col gap-5">
+            {registeredClubs.map((club) => (
+              <button
+                key={club}
+                onClick={() => undefined}
+                className="flex items-center justify-between text-left"
+              >
+                <span>
+                  <span style={{ display: "block", fontFamily: "Inter, sans-serif", color: "#111", fontSize: 14, fontWeight: 700 }}>
+                    {club}
+                  </span>
+                  <span style={{ display: "block", fontFamily: "Inter, sans-serif", color: "#111", fontSize: 11 }}>
+                    Member
+                  </span>
+                </span>
+                <ChevronRight size={18} fill="#5A2E3C" style={{ color: "#5A2E3C" }} />
+              </button>
+            ))}
+          </div>
           <button
             onClick={onLogout}
-            className="p-5 rounded-2xl flex items-center gap-4 w-full mt-6"
-            style={{ background: "#FFF9FC", border: "2px solid rgba(178,112,146,0.3)" }}
+            className="mt-8 px-5 py-2 rounded-full"
+            style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 12 }}
           >
-            <LogOut size={20} style={{ color: "#B27092" }} />
-            <span style={{ fontFamily: "Poppins, sans-serif", color: "#B27092", fontSize: 16, fontWeight: 600 }}>Sign Out</span>
+            Sign Out
           </button>
         </div>
       </div>
@@ -975,19 +1229,19 @@ export function DemoPage() {
       case "login":
         return <LoginScreen onLogin={handleLogin} />;
       case "home":
-        return <HomeScreen state={appState} onNav={setScreen} />;
+        return <HomeScreen onNav={setScreen} />;
       case "clubs":
         return <ClubsScreen state={appState} setState={setAppState} />;
       case "checkin":
         return <CheckInScreen state={appState} setState={setAppState} onNav={setScreen} />;
       case "nearby":
-        return <NearbyScreen state={appState} onNav={setScreen} onMessage={handleMessage} />;
+        return <NearbyScreen state={appState} setState={setAppState} onMessage={handleMessage} />;
       case "messaging":
         return <MessagingScreen state={appState} setState={setAppState} targetId={messageTarget} />;
       case "events":
         return <EventsScreen state={appState} setState={setAppState} />;
       case "profile":
-        return <ProfileScreen state={appState} onLogout={handleLogout} />;
+        return <ProfileScreen onLogout={handleLogout} />;
       default:
         return null;
     }
