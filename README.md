@@ -4,7 +4,7 @@ WayPoint is Team Mango's CSE 440 Spring 2026 final project website and interacti
 
 This repository intentionally contains both deliverables in one Vite/React project:
 
-- `/` is the public-facing project website / landing page.
+- `/landing` is the public-facing project website / landing page.
 - `/demo` is the working interactive kiosk prototype for the stretch-goal computer implementation.
 
 The assignment mentions submitting a separate GitHub repo for the computer prototype. We kept the website and coded prototype together so the landing page can directly link to the demo and so reviewers can run one project instead of switching between two codebases.
@@ -27,8 +27,6 @@ WayPoint is a campus kiosk concept for helping University of Washington students
 
 ### Landing Page
 
-Route: `/`
-
 The landing page includes the required final website content:
 
 - Product name and logo
@@ -43,8 +41,6 @@ The landing page includes the required final website content:
 Main file: `src/app/components/LandingPage.tsx`
 
 ### Interactive Demo
-
-Route: `/demo`
 
 The demo is a coded kiosk prototype. It includes:
 
