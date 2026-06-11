@@ -92,21 +92,21 @@ function KioskShell({ screen, onNav, children }: {
   ];
 
   return (
-    <div className="flex h-full" style={{ background: "#1F1F1F" }}>
+    <div className="flex h-full min-h-0 max-md:flex-col" style={{ background: "#1F1F1F" }}>
       {/* Left Sidebar Navigation */}
       {screen !== "login" && (
         <div
-          className="flex flex-col w-24 flex-shrink-0"
+          className="flex flex-col w-24 flex-shrink-0 max-md:order-2 max-md:h-16 max-md:w-full max-md:flex-row"
           style={{ background: "#5A2E3C" }}
         >
           {/* Navigation */}
-          <div className="flex-1 pt-8 flex flex-col">
+          <div className="flex-1 pt-8 flex flex-col max-md:flex-row max-md:pt-0">
             {navItems.map((n) => (
               <button
                 key={n.id}
                 onClick={() => onNav(n.id)}
                 aria-label={n.label}
-                className="h-20 flex items-center justify-center transition-all"
+                className="h-20 flex items-center justify-center transition-all max-md:h-16 max-md:flex-1"
                 style={{
                   background: screen === n.id ? "rgba(255,255,255,0.18)" : "transparent",
                   color: "rgba(255,255,255,0.84)",
@@ -118,31 +118,31 @@ function KioskShell({ screen, onNav, children }: {
           </div>
 
           {/* Footer */}
-          <div className="h-20 flex items-center justify-center">
+          <div className="h-20 flex items-center justify-center max-md:hidden">
             <LogOut size={38} style={{ color: "#FFD439" }} />
           </div>
         </div>
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col" style={{ background: "#FFFFFF" }}>
+      <div className="flex-1 flex min-h-0 flex-col" style={{ background: "#FFFFFF" }}>
         {/* Top Header Bar */}
         {screen !== "login" && (
           <div
-            className="flex items-center justify-between px-8 py-5 flex-shrink-0"
+            className="flex items-center justify-between gap-3 px-8 py-5 flex-shrink-0 max-md:px-4 max-md:py-3"
             style={{ background: "#5A2E3C", borderBottom: "1px solid rgba(0,0,0,0.2)" }}
           >
-            <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: 22 }}>
+            <h2 className="leading-tight" style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: "clamp(16px, 4vw, 22px)" }}>
               University of Washington
             </h2>
-            <span style={{ fontFamily: "Inter, sans-serif", color: "white", fontSize: 18 }}>
+            <span className="text-right max-sm:hidden" style={{ fontFamily: "Inter, sans-serif", color: "white", fontSize: "clamp(13px, 3vw, 18px)" }}>
               Monday, Jun 1 | 10 : 00 AM
             </span>
           </div>
         )}
 
         {/* Screen Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={screen}
@@ -150,7 +150,7 @@ function KioskShell({ screen, onNav, children }: {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }}
               transition={{ duration: 0.3 }}
-              className="h-full"
+              className="min-h-full"
             >
               {children}
             </motion.div>
@@ -177,28 +177,28 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="h-full flex flex-col" style={{ background: "#EFE5E7" }}>
       <div
-        className="flex items-center justify-between px-8 py-4 flex-shrink-0"
+        className="flex items-center justify-between gap-3 px-8 py-4 flex-shrink-0 max-md:px-4 max-md:py-3"
         style={{ background: "#5A2E3C", borderBottom: "1px solid rgba(0,0,0,0.22)" }}
       >
-        <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: 22 }}>
+        <h2 className="leading-tight" style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: "clamp(16px, 4vw, 22px)" }}>
           University of Washington
         </h2>
-        <span style={{ fontFamily: "Inter, sans-serif", color: "white", fontSize: 18 }}>
+        <span className="text-right max-sm:hidden" style={{ fontFamily: "Inter, sans-serif", color: "white", fontSize: "clamp(13px, 3vw, 18px)" }}>
           Monday, Jun 1 | 10 : 00 AM
         </span>
       </div>
 
-      <div className="grid grid-cols-[0.95fr_1.45fr] flex-1">
+      <div className="grid grid-cols-[0.95fr_1.45fr] flex-1 max-md:grid-cols-1 max-md:overflow-y-auto">
         <div
-          className="px-16 py-20"
+          className="px-16 py-20 max-md:px-6 max-md:py-7"
           style={{ background: "#5A2E3C" }}
         >
-          <div className="flex items-center mb-24">
-            <span style={{ fontFamily: "Poppins, sans-serif", color: "white", fontSize: 58, fontWeight: 700, letterSpacing: "-0.04em" }}>
+          <div className="flex items-center mb-24 max-md:mb-5">
+            <span style={{ fontFamily: "Poppins, sans-serif", color: "white", fontSize: "clamp(40px, 13vw, 58px)", fontWeight: 700, letterSpacing: 0 }}>
               WayP
             </span>
             <MapPin size={54} strokeWidth={2.8} style={{ color: "white", margin: "0 -2px" }} />
-            <span style={{ fontFamily: "Poppins, sans-serif", color: "white", fontSize: 58, fontWeight: 700, letterSpacing: "-0.04em" }}>
+            <span style={{ fontFamily: "Poppins, sans-serif", color: "white", fontSize: "clamp(40px, 13vw, 58px)", fontWeight: 700, letterSpacing: 0 }}>
               int
             </span>
           </div>
@@ -208,9 +208,9 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
           </p>
         </div>
 
-        <div className="flex items-center justify-center px-16">
+        <div className="flex items-center justify-center px-16 max-md:px-6 max-md:py-8">
           <div style={{ width: "100%", maxWidth: 380 }}>
-            <h1 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 30, marginBottom: 64, textAlign: "center" }}>
+            <h1 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: "clamp(24px, 7vw, 30px)", marginBottom: 36, textAlign: "center" }}>
               Sign in with your UW netID
             </h1>
 
@@ -306,17 +306,17 @@ function HomeScreen({ onNav }: { onNav: (s: Screen) => void }) {
   ];
 
   return (
-    <div className="px-16 py-14">
-      <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 28, marginBottom: 46 }}>
+    <div className="px-16 py-14 max-md:px-5 max-md:py-5">
+      <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: "clamp(24px, 7vw, 28px)", marginBottom: 28 }}>
         Welcome, Amber!
       </h2>
 
-      <div className="grid grid-cols-2 gap-x-28 gap-y-14 max-w-4xl">
+      <div className="grid grid-cols-2 gap-x-28 gap-y-14 max-w-4xl max-md:grid-cols-1 max-md:gap-4">
         {homeCards.map((card) => (
           <button
             key={card.title}
             onClick={() => onNav(card.screen)}
-            className="text-left rounded-2xl px-8 py-7 min-h-[132px]"
+            className="text-left rounded-2xl px-8 py-7 min-h-[132px] max-md:px-5 max-md:py-5"
             style={{
               background: "#EFE5E7",
               boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
@@ -343,12 +343,12 @@ function HomeScreen({ onNav }: { onNav: (s: Screen) => void }) {
 
 function ClubsScreen({ state, setState }: { state: AppState; setState: (s: AppState) => void }) {
   return (
-    <div className="p-8">
+    <div className="p-8 max-md:p-5">
       <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 15, marginBottom: 32 }}>
         Your registered student organizations
       </p>
 
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-2 gap-8 max-md:grid-cols-1 max-md:gap-6">
         {/* My Clubs */}
         <div>
           <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 20, marginBottom: 16 }}>
@@ -358,7 +358,7 @@ function ClubsScreen({ state, setState }: { state: AppState; setState: (s: AppSt
             {CLUBS.filter((c) => state.myClubs.includes(c.id)).map((club) => (
               <div
                 key={club.id}
-                className="p-5 rounded-2xl flex items-center gap-4"
+                className="p-5 rounded-2xl flex items-center gap-4 max-sm:flex-wrap"
                 style={{ background: "white", border: "2px solid rgba(81,45,56,0.15)" }}
               >
                 <div
@@ -373,7 +373,7 @@ function ClubsScreen({ state, setState }: { state: AppState; setState: (s: AppSt
                 >
                   {club.emoji}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 17 }}>{club.name}</p>
                   <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14 }}>{club.members} members · {club.category}</p>
                 </div>
@@ -392,7 +392,7 @@ function ClubsScreen({ state, setState }: { state: AppState; setState: (s: AppSt
             {CLUBS.filter((c) => !state.myClubs.includes(c.id)).map((club) => (
               <div
                 key={club.id}
-                className="p-5 rounded-2xl flex items-center gap-4"
+                className="p-5 rounded-2xl flex items-center gap-4 max-sm:flex-wrap"
                 style={{ background: "#F8F4F6", border: "1px solid rgba(81,45,56,0.08)" }}
               >
                 <div
@@ -407,7 +407,7 @@ function ClubsScreen({ state, setState }: { state: AppState; setState: (s: AppSt
                 >
                   {club.emoji}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600, color: "#2B2B2B", fontSize: 17 }}>{club.name}</p>
                   <p style={{ fontFamily: "Inter, sans-serif", color: "#717182", fontSize: 14 }}>{club.members} members · {club.category}</p>
                 </div>
@@ -461,15 +461,15 @@ function NearbyScreen({ state, setState, onMessage }: { state: AppState; setStat
   const sameBuilding = NEARBY.filter((f) => f.dist === "Same building");
 
   return (
-    <div className="p-8">
-      <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 28, marginBottom: 28 }}>
+    <div className="p-8 max-md:p-5">
+      <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: "clamp(24px, 7vw, 28px)", marginBottom: 24 }}>
         Club Peers Check-In Nearby
       </h3>
 
       {!checkedIn ? (
-        <div className="grid grid-cols-[0.9fr_1.4fr] gap-8">
+        <div className="grid grid-cols-[0.9fr_1.4fr] gap-8 max-md:grid-cols-1 max-md:gap-5">
           <div
-            className="rounded-2xl p-7"
+            className="rounded-2xl p-7 max-md:p-5"
             style={{ background: "#EFE5E7", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" }}
           >
             <h4 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 17, textAlign: "center", marginBottom: 26 }}>
@@ -524,7 +524,7 @@ function NearbyScreen({ state, setState, onMessage }: { state: AppState; setStat
           </div>
 
           <div
-            className="rounded-2xl flex flex-col items-center justify-center text-center p-10"
+            className="rounded-2xl flex flex-col items-center justify-center text-center p-10 max-md:p-7"
             style={{ background: "#EFE5E7", boxShadow: "0 2px 8px rgba(0,0,0,0.18)", minHeight: 380 }}
           >
             <MapPin size={58} style={{ color: "#5A2E3C", marginBottom: 28 }} />
@@ -534,9 +534,9 @@ function NearbyScreen({ state, setState, onMessage }: { state: AppState; setStat
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-[0.9fr_1.4fr] gap-8 items-start">
+        <div className="grid grid-cols-[0.9fr_1.4fr] gap-8 items-start max-md:grid-cols-1 max-md:gap-5">
           <div
-            className="rounded-2xl p-8"
+            className="rounded-2xl p-8 max-md:p-5"
             style={{ background: "#EFE5E7", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" }}
           >
             <div
@@ -563,15 +563,15 @@ function NearbyScreen({ state, setState, onMessage }: { state: AppState; setStat
           </div>
 
           <div>
-            <div className="flex justify-center gap-4 mb-5">
+            <div className="flex justify-center gap-4 mb-5 max-sm:flex-col">
               <button
-                className="px-16 py-3 rounded-xl font-semibold"
+                className="px-16 py-3 rounded-xl font-semibold max-sm:px-4"
                 style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", boxShadow: "0 2px 6px rgba(0,0,0,0.18)" }}
               >
                 All ({NEARBY.length})
               </button>
               <button
-                className="px-10 py-3 rounded-xl font-semibold"
+                className="px-10 py-3 rounded-xl font-semibold max-sm:px-4"
                 style={{ background: "#EFE5E7", color: "#111", fontFamily: "Poppins, sans-serif", boxShadow: "0 2px 6px rgba(0,0,0,0.14)" }}
               >
                 Same Building ({sameBuilding.length})
@@ -583,7 +583,7 @@ function NearbyScreen({ state, setState, onMessage }: { state: AppState; setStat
                 <motion.div
                   key={f.id}
                   whileHover={{ y: -3 }}
-                  className="rounded-2xl p-5 flex items-center gap-5"
+                  className="rounded-2xl p-5 flex items-center gap-5 max-sm:flex-wrap"
                   style={{ background: "#EFE5E7", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" }}
                 >
                   <div
@@ -611,7 +611,7 @@ function NearbyScreen({ state, setState, onMessage }: { state: AppState; setStat
                   </div>
                   <button
                     onClick={() => onMessage(f.id)}
-                    className="px-8 py-3 rounded-full font-semibold"
+                    className="px-8 py-3 rounded-full font-semibold max-sm:w-full"
                     style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 12 }}
                   >
                     Message
@@ -649,13 +649,13 @@ function MessagingScreen({ state, setState, targetId, onClose }: { state: AppSta
   return (
     <div className="relative h-full">
       <div
-        className="p-8 h-full flex flex-col"
+        className="p-8 h-full flex flex-col max-md:p-5"
         style={{ filter: sent ? "blur(10px)" : "none", transition: "filter 180ms ease" }}
       >
-        <div className="max-w-4xl mx-auto w-full flex flex-col h-full">
+        <div className="max-w-4xl mx-auto w-full flex flex-col min-h-full">
         {/* Header */}
         <div
-          className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-200"
+          className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-200 max-md:mb-5 max-md:pb-4"
         >
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center font-bold"
@@ -705,12 +705,12 @@ function MessagingScreen({ state, setState, targetId, onClose }: { state: AppSta
           </div>
 
         {/* Input */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 max-sm:flex-col">
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Write a message..."
-              className="flex-1 px-6 py-4 rounded-2xl outline-none"
+              className="flex-1 px-6 py-4 rounded-2xl outline-none max-sm:min-w-0"
               style={{
                 fontFamily: "Inter, sans-serif", fontSize: 16,
                 border: "1px solid rgba(81,45,56,0.2)", background: "white", color: "#2B2B2B",
@@ -721,7 +721,7 @@ function MessagingScreen({ state, setState, targetId, onClose }: { state: AppSta
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={send}
-              className="w-14 h-14 rounded-2xl flex items-center justify-center"
+              className="w-14 h-14 rounded-2xl flex items-center justify-center max-sm:w-full"
               style={{ background: "#512D38", color: "white" }}
             >
               <Send size={20} />
@@ -743,7 +743,8 @@ function MessagingScreen({ state, setState, targetId, onClose }: { state: AppSta
               initial={{ opacity: 0, y: 12, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.96 }}
-              style={{ background: "white", width: 575, boxShadow: "0 3px 12px rgba(0,0,0,0.35)" }}
+              className="w-[575px] max-w-[calc(100%-32px)]"
+              style={{ background: "white", boxShadow: "0 3px 12px rgba(0,0,0,0.35)" }}
             >
               <div
                 className="flex items-center justify-between px-5 py-3"
@@ -760,10 +761,10 @@ function MessagingScreen({ state, setState, targetId, onClose }: { state: AppSta
                   x
                 </button>
               </div>
-              <div className="px-20 py-12 flex flex-col items-center">
+              <div className="px-20 py-12 flex flex-col items-center max-md:px-5 max-md:py-8">
                 <CheckCircle size={54} strokeWidth={1.8} style={{ color: "#1A9A00", marginBottom: 28 }} />
                 <div
-                  className="rounded-xl px-10 py-14 text-center"
+                  className="rounded-xl px-10 py-14 text-center max-md:px-4 max-md:py-8"
                   style={{ background: "#EFE5E7", width: "100%" }}
                 >
                   <p style={{ fontFamily: "Poppins, sans-serif", color: "#111", fontSize: 21, fontWeight: 700, lineHeight: 1.25 }}>
@@ -805,18 +806,18 @@ function EventsScreen({ state, setState }: { state: AppState; setState: (s: AppS
   return (
     <div className="relative h-full">
       <div
-        className="h-full px-7 py-7 overflow-y-auto"
+        className="h-full px-7 py-7 overflow-y-auto max-md:px-5 max-md:py-5"
         style={{ filter: cancelTarget !== null ? "blur(10px)" : "none", transition: "filter 180ms ease" }}
       >
-        <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 28, marginBottom: 22 }}>
+        <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: "clamp(24px, 7vw, 28px)", marginBottom: 22 }}>
           Campus Events
         </h2>
 
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex gap-3">
+        <div className="flex items-center justify-between mb-3 gap-3 max-md:flex-col max-md:items-stretch">
+          <div className="flex gap-3 max-sm:flex-col">
             <button
               onClick={() => setView("all")}
-              className="px-12 py-3 rounded-xl font-semibold"
+              className="px-12 py-3 rounded-xl font-semibold max-sm:px-4"
               style={{
                 background: view === "all" ? "#5A2E3C" : "#EFE5E7",
                 color: view === "all" ? "white" : "#111",
@@ -828,7 +829,7 @@ function EventsScreen({ state, setState }: { state: AppState; setState: (s: AppS
             </button>
             <button
               onClick={() => setView("today")}
-              className="px-10 py-3 rounded-xl font-semibold"
+              className="px-10 py-3 rounded-xl font-semibold max-sm:px-4"
               style={{
                 background: view === "today" ? "#5A2E3C" : "#EFE5E7",
                 color: view === "today" ? "white" : "#111",
@@ -841,7 +842,7 @@ function EventsScreen({ state, setState }: { state: AppState; setState: (s: AppS
           </div>
           <button
             onClick={() => setView("active")}
-            className="px-9 py-3 rounded-xl font-semibold"
+            className="px-9 py-3 rounded-xl font-semibold max-sm:px-4"
             style={{
               background: view === "active" ? "#5A2E3C" : "#EFE5E7",
               color: view === "active" ? "white" : "#111",
@@ -865,11 +866,11 @@ function EventsScreen({ state, setState }: { state: AppState; setState: (s: AppS
               <motion.div
                 key={ev.id}
                 layout
-                className="rounded-2xl px-4 py-4 flex items-center gap-7"
+                className="rounded-2xl px-4 py-4 flex items-center gap-7 max-sm:flex-col max-sm:items-stretch"
                 style={{ background: "#EFE5E7", boxShadow: "0 2px 7px rgba(0,0,0,0.18)" }}
               >
                 <div
-                  className="w-36 h-24 rounded-xl flex-shrink-0 overflow-hidden"
+                  className="w-36 h-24 rounded-xl flex-shrink-0 overflow-hidden max-sm:w-full"
                   style={{
                     backgroundImage: `linear-gradient(rgba(90,46,60,0.08), rgba(90,46,60,0.08)), url(${ev.image})`,
                     backgroundSize: "cover",
@@ -891,7 +892,7 @@ function EventsScreen({ state, setState }: { state: AppState; setState: (s: AppS
                 {isRegistered ? (
                   <button
                     onClick={() => setCancelTarget(ev.id)}
-                    className="px-8 py-3 rounded-2xl font-semibold"
+                    className="px-8 py-3 rounded-2xl font-semibold max-sm:w-full"
                     style={{ background: "#FCE7F0", color: "#111", border: "1px solid #8D4A64", fontFamily: "Poppins, sans-serif", fontSize: 14 }}
                   >
                     Cancel RSVP
@@ -899,7 +900,7 @@ function EventsScreen({ state, setState }: { state: AppState; setState: (s: AppS
                 ) : (
                   <button
                     onClick={() => register(ev.id)}
-                    className="px-8 py-3 rounded-2xl font-semibold"
+                    className="px-8 py-3 rounded-2xl font-semibold max-sm:w-full"
                     style={{ background: "#5A2E3C", color: "white", fontFamily: "Poppins, sans-serif", fontSize: 14 }}
                   >
                     Add to My RSVPs
@@ -924,13 +925,13 @@ function EventsScreen({ state, setState }: { state: AppState; setState: (s: AppS
               initial={{ opacity: 0, y: 12, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.96 }}
-              className="rounded-md px-16 py-14"
-              style={{ background: "white", boxShadow: "0 3px 12px rgba(0,0,0,0.35)", width: 440 }}
+              className="w-[440px] max-w-[calc(100%-32px)] rounded-md px-16 py-14 max-md:px-6 max-md:py-8"
+              style={{ background: "white", boxShadow: "0 3px 12px rgba(0,0,0,0.35)" }}
             >
               <p style={{ fontFamily: "Poppins, sans-serif", color: "#111", fontSize: 22, fontWeight: 700, textAlign: "center", marginBottom: 38 }}>
                 Do you want to cancel this event?
               </p>
-              <div className="flex justify-center gap-4">
+              <div className="flex justify-center gap-4 max-sm:flex-col">
                 <button
                   onClick={() => setCancelTarget(null)}
                   className="px-12 py-2 rounded-md font-semibold"
@@ -983,14 +984,14 @@ function ProfileScreen({ onLogout }: { onLogout: () => void }) {
   };
 
   return (
-    <div className="px-7 py-7">
-      <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 28, marginBottom: 24 }}>
+    <div className="px-7 py-7 max-md:px-5 max-md:py-5">
+      <h2 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: "clamp(24px, 7vw, 28px)", marginBottom: 24 }}>
         My Profile
       </h2>
 
-      <div className="grid grid-cols-[1.4fr_1fr] gap-5">
+      <div className="grid grid-cols-[1.4fr_1fr] gap-5 max-md:grid-cols-1">
         <div
-          className="rounded-2xl p-8 flex gap-8"
+          className="rounded-2xl p-8 flex gap-8 max-sm:flex-col max-sm:items-start max-md:p-5"
           style={{ background: "#EFE5E7" }}
         >
           <div
@@ -1008,7 +1009,7 @@ function ProfileScreen({ onLogout }: { onLogout: () => void }) {
           >
             AJ
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <h3 style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "#111", fontSize: 26 }}>
               Amber J
             </h3>
@@ -1032,7 +1033,7 @@ function ProfileScreen({ onLogout }: { onLogout: () => void }) {
         </div>
 
         <div
-          className="rounded-2xl p-6"
+          className="rounded-2xl p-6 max-md:p-5"
           style={{ background: "#EFE5E7" }}
         >
           <div className="flex items-center gap-3 mb-8">
@@ -1051,7 +1052,7 @@ function ProfileScreen({ onLogout }: { onLogout: () => void }) {
         </div>
 
         <div
-          className="rounded-2xl p-6"
+          className="rounded-2xl p-6 max-md:p-5"
           style={{ background: "#EFE5E7" }}
         >
           <div className="flex items-center justify-between mb-6">
@@ -1090,7 +1091,7 @@ function ProfileScreen({ onLogout }: { onLogout: () => void }) {
             ))}
           </div>
           {editingHobbies && (
-            <div className="mt-5 flex gap-3">
+            <div className="mt-5 flex gap-3 max-sm:flex-col">
               <input
                 value={newHobby}
                 onChange={(e) => setNewHobby(e.target.value)}
@@ -1111,7 +1112,7 @@ function ProfileScreen({ onLogout }: { onLogout: () => void }) {
         </div>
 
         <div
-          className="rounded-2xl p-6"
+          className="rounded-2xl p-6 max-md:p-5"
           style={{ background: "#EFE5E7" }}
         >
           <div className="flex items-center gap-3 mb-6">
@@ -1193,7 +1194,7 @@ export function DemoPage() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center p-8"
+      className="min-h-screen flex flex-col items-center justify-center p-8 max-md:justify-start max-md:p-4"
       style={{ background: "linear-gradient(135deg, #2a1219 0%, #512D38 60%, #7a3f52 100%)" }}
     >
       {/* Back link */}
@@ -1207,9 +1208,9 @@ export function DemoPage() {
         </a>
       </div>
 
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 max-md:mb-4">
         <h1
-          style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: 32, marginBottom: 8 }}
+          style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700, color: "white", fontSize: "clamp(24px, 8vw, 32px)", marginBottom: 8 }}
         >
           WayPoint Interactive Kiosk
         </h1>
@@ -1220,11 +1221,12 @@ export function DemoPage() {
 
       {/* Landscape Kiosk frame */}
       <div
-        className="relative rounded-3xl overflow-hidden"
+        className="relative rounded-3xl overflow-hidden max-md:rounded-2xl"
         style={{
           width: "100%",
           maxWidth: 1280,
-          height: 720,
+          height: "min(720px, calc(100vh - 220px))",
+          minHeight: 520,
           boxShadow: "0 40px 120px rgba(0,0,0,0.6), 0 0 0 3px rgba(244,191,219,0.25), inset 0 0 60px rgba(81,45,56,0.2)",
           background: "#FFF9FC",
         }}
@@ -1236,12 +1238,12 @@ export function DemoPage() {
 
       {/* Screen selector */}
       {screen !== "login" && (
-        <div className="mt-8 flex flex-wrap justify-center gap-3 max-w-4xl">
+        <div className="mt-8 flex flex-wrap justify-center gap-3 max-w-4xl max-md:mt-4 max-md:gap-2">
           {(["home", "clubs", "nearby", "messaging", "events", "profile"] as Screen[]).map((s) => (
             <button
               key={s}
               onClick={() => setScreen(s)}
-              className="px-5 py-2.5 rounded-full text-sm capitalize transition-all"
+              className="px-5 py-2.5 rounded-full text-sm capitalize transition-all max-md:px-3 max-md:py-2"
               style={{
                 background: screen === s ? "#F4BFDB" : "rgba(255,255,255,0.1)",
                 color: screen === s ? "#512D38" : "rgba(255,255,255,0.7)",
